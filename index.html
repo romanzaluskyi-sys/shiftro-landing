@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shiftro — ewidencja czasu pracy i grafik dla gastronomii</title>
+<meta name="description" content="Godziny, grafik i cały dzień lokalu w jednym miejscu. Pracownik odbija zmianę na tablecie w lokalu albo na telefonie, kierownik ma grafik, koszt pracy, checklisty i zamknięcie dnia. Szukamy lokali do bezpłatnych testów.">
+<link rel="icon" type="image/svg+xml" href="/shiftro-favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shiftro.pl/">
+<meta property="og:title" content="Shiftro — ewidencja czasu pracy i grafik dla gastronomii">
+<meta property="og:description" content="Godziny, grafik i cały dzień lokalu w jednym miejscu. Szukamy lokali do bezpłatnych testów.">
+<meta property="og:locale" content="pl_PL">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   Tokeny systemu "Modernist" z Claude Design, ZESTROJONE z paletą aplikacji
+   (src/components/manager/designTokens.ts). Makieta przyszła z własnym
+   akcentem #ec3013; lendingu i aplikacji nie może dzielić prawie-ten-sam
+   czerwony, bo znak Shiftro ma w pasie dokładnie #DE3A22 i różnica widać
+   gołym okiem, gdy stoją obok siebie.
+   ───────────────────────────────────────────────────────────────────────── */
+:root {
+  --color-bg: #F1F1EE;
+  --color-surface: #E7E7E2;
+  --color-text: #171714;
+  --color-accent: #DE3A22;
+  --color-accent-2: #e15b47;
+  --color-divider: color-mix(in srgb, #171714 40%, transparent);
+
+  --color-neutral-100: #F8F4F4;
+  --color-neutral-200: #E7E7E2;
+  --color-neutral-300: #D7D3D3;
+  --color-neutral-400: #BAB6B6;
+  --color-neutral-500: #9B9797;
+  --color-neutral-600: #7D7979;
+  --color-neutral-700: #605D5D;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2D2B2B;
+
+  --color-accent-100: #FAEAE6;
+  --color-accent-200: #F5D5CD;
+  --color-accent-300: #EDB0A2;
+  --color-accent-400: #E67C66;
+  --color-accent-500: #E85A45;
+  --color-accent-600: #C4301B;
+  --color-accent-700: #9E2413;
+  --color-accent-800: #7A1C0F;
+  --color-accent-900: #4D170E;
+
+  --font-heading: "Archivo", system-ui, sans-serif;
+  --font-heading-weight: 800;
+  --font-body: "Archivo", system-ui, sans-serif;
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-6: 24px; --space-8: 32px;
+
+  /* Znak Shiftro jest kwadratowy i bez zaokrągleń — cały ten system też. */
+  --radius-sm: 0px; --radius-md: 0px; --radius-lg: 0px;
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2D2B2B 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2D2B2B 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2D2B2B 22%, transparent);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; font-size: 15px; line-height: 1.55; font-weight: 400;
+  background: var(--color-bg); color: var(--color-text);
+  font-family: var(--font-body); text-wrap: pretty;
+}
+html { scroll-behavior: smooth; }
+/* display:contents na przełącznikach ekranów wygrywa ze zwykłym
+   [hidden]{display:none} — stąd !important. */
+[hidden] { display: none !important; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 var(--space-2);
+}
+h1 { font-size: 42px; } h2 { font-size: 32px; } h3 { font-size: 25px; }
+h4 { font-size: 20px; } h5 { font-size: 16px; }
+h6 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--color-accent-700); text-underline-offset: 3px; }
+a:hover { color: var(--color-accent); }
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+figcaption { font-size: 11px; margin-top: var(--space-1); color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+.text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+.hr { height: 2px; border: 0; margin: var(--space-4) 0; background: var(--color-divider); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 14px; line-height: 1.2; color: var(--color-text);
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg { display: block; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: var(--color-bg); }
+.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:active { background: var(--color-accent-700); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-icon { width: 36px; height: 36px; padding: 0; }
+.btn-block { width: 100%; margin-top: var(--space-2); justify-content: flex-start; text-align: left; }
+
+.field > label { display: block; font-size: 12px; margin-bottom: 5px; color: color-mix(in srgb, var(--color-text) 70%, transparent); }
+.input {
+  width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+}
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+textarea.input { min-height: 90px; resize: vertical; }
+.radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+.radio input, .seg-opt input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+.radio .dot { width: 16px; height: 16px; flex: none; border-radius: 50%; border: 1.5px solid var(--color-divider); }
+.radio:hover .dot { border-color: var(--color-accent); }
+.radio input:checked + .dot { border-color: var(--color-accent); background: var(--color-accent); box-shadow: inset 0 0 0 4px var(--color-bg); }
+.radio input:focus-visible + .dot { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.seg { display: inline-flex; overflow: hidden; border: 1px solid var(--color-divider); border-radius: var(--radius-md); }
+.seg-opt { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+.seg-opt + .seg-opt { border-left: 1px solid var(--color-divider); }
+.seg-opt:has(input:checked) { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:not(:has(input:checked)):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.seg-opt:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+.card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface); }
+.card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+.card-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1.2; }
+.card-body { margin: 0; font-size: 13px; opacity: 0.8; flex: 1; }
+.card-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }
+.elev-sm { box-shadow: var(--shadow-sm); }
+.elev-md { box-shadow: var(--shadow-md); }
+.elev-lg { box-shadow: var(--shadow-lg); }
+
+.tag { display: inline-flex; align-items: center; font-size: 11px; letter-spacing: 0.02em; padding: 3px 10px; border-radius: calc(var(--radius-md) * 0.75); }
+.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+.tag-accent-2 { background: #FFF2EF; color: #71261B; }
+.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 60%, transparent); padding: var(--space-2); border-bottom: 2px solid var(--color-divider); }
+.table td { padding: var(--space-2); border-bottom: 1px solid var(--color-divider); }
+.table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+</style>
+</head>
+<body>
+<div style="font-family: var(--font-body); color: var(--color-text); background: var(--color-bg); --edge: clamp(20px, 5vw, 72px);">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 18px var(--edge); border-bottom: 2px solid var(--color-divider);">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <svg width="30" height="30" viewBox="0 0 100 100" role="img" aria-label="Shiftro">
+        <rect width="100" height="100" fill="#171714"></rect>
+        <rect x="18" y="26" width="52" height="15" fill="#F1F1EE"></rect>
+        <rect x="30" y="47" width="52" height="15" fill="#DE3A22"></rect>
+        <rect x="18" y="68" width="30" height="15" fill="#F1F1EE"></rect>
+      </svg>
+      <span style="font-family: var(--font-heading); font-weight: 800; font-size: 21px; letter-spacing: -0.01em;">Shiftro</span>
+    </div>
+    <nav style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+      <div data-when="onLanding" style="display:contents">
+        <a href="#produkt" style="font-size: 14px; font-weight: 600; text-decoration: none; color: var(--color-text);">Produkt</a>
+      </div>
+      <div data-when="onLanding" style="display:contents">
+        <a href="#dla-pracownikow" style="font-size: 14px; font-weight: 600; text-decoration: none; color: var(--color-text);">Dla pracowników</a>
+      </div>
+      <div data-when="onAnkieta" style="display:contents" hidden>
+        <button type="button" class="btn btn-ghost" data-act="goLanding">Wróć na stronę</button>
+      </div>
+      <div data-when="onLanding" style="display:contents">
+        <button type="button" class="btn btn-primary" data-act="goAnkieta">Zgłoś lokal do testów</button>
+      </div>
+    </nav>
+  </header>
+
+  <div data-when="onLanding" style="display:contents">
+  <div>
+  <section style="max-width: 1200px; margin: 0 auto; padding: 96px var(--edge) 72px;">
+    <h1 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(40px, 6vw, 80px); line-height: 1.06; letter-spacing: -0.02em; margin: 0 0 28px; margin-left: -0.058em; max-width: 16ch;">Godziny, grafik i cały dzień lokalu w jednym miejscu.</h1>
+    <p style="font-size: 18px; line-height: 1.6; max-width: 58ch; margin: 0 0 32px;">Grafik, który żyje przez cały tydzień: układasz obsadę, pracownicy proszą o wolne i wymieniają się zmianami, a system pilnuje dziur w obsadzie i urlopów. Odbicie zmiany to jedno dotknięcie na tablecie w lokalu albo na własnym telefonie — nic nie przepisujesz z arkusza.</p>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <button type="button" class="btn btn-primary" data-act="goAnkieta">Wypełnij ankietę zgłoszeniową</button>
+      <a href="#produkt" class="btn btn-secondary">Zobacz, jak to wygląda</a>
+    </div>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 56px var(--edge);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px;">
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">4</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">lokale na produkcji</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">60–90 s</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">tyle trwa zamknięcie dnia</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">0 zł</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">za udział w testach</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">1 dzień</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">wdrożenie lokalu</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">13</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">zakładek panelu kierownika</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">30 / 14 / 7</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">dni przypomnień o terminach</p>
+      </div>
+      <div>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 3.2vw, 46px); line-height: 1.1; color: var(--color-accent); margin: 0;">2 min</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; color: #56544f;">tyle zajmuje ankieta</p>
+      </div>
+    </div>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section id="produkt" style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge) 56px;">
+    <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-700); margin: 0 0 16px; font-weight: 600;">Panel kierownika</p>
+    <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px; max-width: 20ch;">Dziś w liczbach, zanim ktokolwiek o to zapyta.</h2>
+    <p style="font-size: 17px; line-height: 1.65; max-width: 56ch; margin: 0 0 40px;">Ekran, który kierownik widzi po zalogowaniu: godziny, koszt miesiąca, plan kontra fakt za wczoraj i kolejka rzeczy czekających na decyzję.</p>
+
+    <div style="border: 2px solid var(--color-divider); background: #F1F1EE; overflow-x: auto; overflow-y: hidden;">
+      <div style="display: flex; min-width: 580px; min-height: 520px; font-family: 'Archivo', sans-serif;">
+        <aside style="width: 232px; flex-shrink: 0; background: #3D3C36; color: #fff; display: flex; flex-direction: column;">
+          <div style="padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.15);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <svg width="24" height="24" viewBox="0 0 100 100" role="img" aria-label="Shiftro">
+                <rect width="100" height="100" fill="#F1F1EE"></rect>
+                <rect x="18" y="26" width="52" height="15" fill="#171714"></rect>
+                <rect x="30" y="47" width="52" height="15" fill="#DE3A22"></rect>
+                <rect x="18" y="68" width="30" height="15" fill="#171714"></rect>
+              </svg>
+              <span style="font-weight: 800; font-size: 18px;">Shiftro</span>
+            </div>
+            <p style="font-size: 11.5px; color: #B7B6AE; margin: 6px 0 0;">Ewa K. · kierownik sieci</p>
+            <p style="font-size: 10.5px; color: rgba(183,182,174,0.7); margin: 2px 0 0;">Grupa Sól</p>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid #DE3A22; background: rgba(255,255,255,0.1); color: #fff;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Pulpit</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>Zatwierdzanie zmian<span style="margin-left: auto; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 6px;">3</span></div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Grafik</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg>Zadania<span style="margin-left: auto; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 6px;">4</span></div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>Puls</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>Rejestr Godzin</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Moja Praca</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Aktywni</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" x2="4" y1="22" y2="15"></line></svg>Zgłoszenia<span style="margin-left: auto; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 6px;">1</span></div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>Powiadomienia<span style="margin-left: auto; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 6px;">2</span></div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Pracownicy</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Raporty i koszty</div>
+            <div style="padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; border-left: 3px solid transparent; color: #C9C8C1;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>Przewodnik</div>
+          </div>
+          <div style="margin-top: auto; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; color: #B7B6AE; border-top: 1px solid rgba(255,255,255,0.15);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>Wyloguj</div>
+          <div style="padding: 0 0 10px;"></div>
+        </aside>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+          <div style="background: #fff; border-bottom: 2px solid #171714; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <span style="padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 13px; border: 2px solid #171714; background: #171714; color: #fff;">Cała sieć</span>
+              <span style="padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 13px; border: 2px solid #B7B6AE; background: #fff; color: #171714;">Kotwica</span>
+              <span style="padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 13px; border: 2px solid #B7B6AE; background: #fff; color: #171714;">Piekarnia Wschód</span>
+              <span style="padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 13px; border: 2px solid #B7B6AE; background: #fff; color: #171714;">Bar Sól</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #6E6E66; flex-shrink: 0;">
+              <span style="display: flex; align-items: center; gap: 5px; color: #B7B6AE;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>17°C</span>
+              <span>czwartek, 10 września · 09:14</span>
+              <span style="width: 36px; height: 36px; border: 2px solid #B7B6AE; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #171714;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+              <span style="position: relative; width: 36px; height: 36px; border: 2px solid #B7B6AE; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #171714;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg><span style="position: absolute; top: -8px; right: -8px; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 6px;">2</span></span>
+            </div>
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 18px;">
+            <p style="font-weight: 800; font-size: 22px; margin: 0; color: #171714;">Dziś w liczbach</p>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Godziny dziś</p>
+                <p style="font-weight: 800; font-size: 28px; color: #171714; margin: 4px 0 0;">38,5</p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">7 osób na zmianie</p>
+              </div>
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Tydzień</p>
+                <p style="font-weight: 800; font-size: 28px; color: #171714; margin: 4px 0 0;">214,0</p>
+                <p style="font-size: 13px; font-weight: 700; color: #2E6B44; margin: 2px 0 0;">+6% vs poprzedni tydzień</p>
+              </div>
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Koszt miesiąca</p>
+                <p style="font-weight: 800; font-size: 28px; color: #171714; margin: 4px 0 0;">31 480 <span style="font-size: 16px;">zł</span></p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">wg stawek z kart pracowników</p>
+              </div>
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Godziny w miesiącu</p>
+                <p style="font-weight: 800; font-size: 28px; color: #171714; margin: 4px 0 0;">862,5</p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">vs poprzedni miesiąc <strong>+3%</strong></p>
+              </div>
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Wczoraj — plan vs fakt</p>
+                <p style="font-weight: 800; font-size: 28px; color: #DE3A22; margin: 4px 0 0;">−4,5 h</p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">plan 52,0 h · fakt 47,5 h</p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">2 os. z różnicą</p>
+              </div>
+              <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px;">
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Do decyzji</p>
+                <p style="font-weight: 800; font-size: 28px; color: #171714; margin: 4px 0 0;">6</p>
+                <p style="font-size: 13px; color: #6E6E66; margin: 2px 0 0;">1 bez odbicia, 3 korekty, 1 zamiana, 1 wniosek o wolne</p>
+              </div>
+            </div>
+            <div style="background: #fff; border: 2px solid #171714; border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+              <div>
+                <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86; margin: 0;">Wczoraj — dzień niezamknięty</p>
+                <p style="font-size: 14px; color: #6E6E66; margin: 2px 0 0;">Piekarnia Wschód, Bar Sól · utarg i wpisy jeszcze nie potwierdzone</p>
+              </div>
+              <span style="margin-left: auto; background: #DE3A22; color: #fff; font-weight: 700; font-size: 13px; padding: 10px 16px; border-radius: 4px;">Zamknij dzień</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #56544f; margin: 14px 0 0;">Widok Panelu Kierownika, zakładka Pulpit. Dane przykładowe.</p>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge) 56px;">
+    <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px; max-width: 22ch;">Grafik to nie plik, który raz w tygodniu wisi na drzwiach.</h2>
+    <p style="font-size: 17px; line-height: 1.65; max-width: 58ch; margin: 0 0 40px;">Tydzień układa się w jednej tabeli: obsada per stanowisko, godziny otwarcia, urlopy i prośby o wolne w tych samych komórkach. System liczy sumy na bieżąco i sam pokazuje, gdzie w ciągu dnia nie ma kto stać.</p>
+
+    <div style="border: 2px solid var(--color-divider); background: #fff; overflow: hidden; font-family: 'Archivo', sans-serif;">
+      <div style="padding: 12px 16px; border-bottom: 2px solid #171714; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <span style="font-weight: 800; font-size: 16px;">Kotwica</span>
+        <span style="font-size: 13px; color: #6E6E66;">8–14 września · 6 osób · 214,0 h</span>
+        <span style="font-size: 13px; font-weight: 700; color: #DE3A22;">2 dziury w obsadzie</span>
+        <span style="margin-left: auto; display: flex; gap: 8px;">
+          <span style="border: 2px solid #171714; background: #fff; color: #171714; font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 4px;">Kopiuj z poprzedniego tygodnia</span>
+          <span style="background: #DE3A22; color: #fff; font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 4px;">Publikuj grafik</span>
+        </span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; table-layout: fixed;">
+          <thead>
+            <tr style="background: #F1F1EE;">
+              <th style="text-align: left; padding: 8px 12px; border-right: 2px solid #171714; width: 150px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86;">Pracownik</th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">08</span> <span style="font-weight: 800; font-size: 13px;">pon</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">4 os. · 30 h</div></th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">09</span> <span style="font-weight: 800; font-size: 13px;">wt</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">4 os. · 30 h</div></th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">10</span> <span style="font-weight: 800; font-size: 13px;">śr</span><div style="font-size: 12px; font-weight: 700; color: #DE3A22; margin-top: 4px;">brak 12–15</div></th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">11</span> <span style="font-weight: 800; font-size: 13px;">czw</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">4 os. · 32 h</div></th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">12</span> <span style="font-weight: 800; font-size: 13px;">pt</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">5 os. · 40 h</div></th>
+              <th style="text-align: left; padding: 8px 10px; border-right: 2px solid #E7E7E2;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">13</span> <span style="font-weight: 800; font-size: 13px;">sob</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">6 os. · 48 h</div></th>
+              <th style="text-align: left; padding: 8px 10px;"><span style="font-weight: 800; font-size: 17px; color: #8F8E86;">14</span> <span style="font-weight: 800; font-size: 13px;">nd</span><div style="font-size: 12px; font-weight: 700; color: #6E6E66; margin-top: 4px;">4 os. · 34 h</div></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top: 2px solid #E7E7E2;">
+              <td style="padding: 8px 12px; border-right: 2px solid #171714; vertical-align: top;"><div style="font-weight: 700; font-size: 14px;">Marta W.</div><div style="font-size: 11px; color: #6E6E66; margin-top: 2px;">Kelnerka · 38 h / 40 h</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">10:00–18:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">10:00–18:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">12:00–20:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">12:00–22:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">12:00–22:00</div></td>
+              <td style="padding: 8px 10px; vertical-align: top;"></td>
+            </tr>
+            <tr style="border-top: 2px solid #E7E7E2;">
+              <td style="padding: 8px 12px; border-right: 2px solid #171714; vertical-align: top;"><div style="font-weight: 700; font-size: 14px;">Kuba S.</div><div style="font-size: 11px; color: #6E6E66; margin-top: 2px;">Kucharz · 40 h / 40 h</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">08:00–16:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">08:00–16:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">08:00–16:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">08:00–16:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">08:00–16:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"></td>
+              <td style="padding: 8px 10px; vertical-align: top;"></td>
+            </tr>
+            <tr style="border-top: 2px solid #E7E7E2;">
+              <td style="padding: 8px 12px; border-right: 2px solid #171714; vertical-align: top;"><div style="font-weight: 700; font-size: 14px;">Ola P.</div><div style="font-size: 11px; color: #6E6E66; margin-top: 2px;">Barmanka · 16 h / 20 h</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><span style="display: inline-block; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">Urlop</span></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><span style="display: inline-block; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">Urlop</span></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><span style="display: inline-block; background: #DE3A22; color: #fff; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">Urlop</span></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">16:00–24:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">16:00–24:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700; background: #FDF3D4; color: #7A5B12; border-radius: 4px; padding: 2px 4px; display: inline-block;">prośba o wolne</div></td>
+              <td style="padding: 8px 10px; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">16:00–24:00</div></td>
+            </tr>
+            <tr style="border-top: 2px solid #E7E7E2;">
+              <td style="padding: 8px 12px; border-right: 2px solid #171714; vertical-align: top;"><div style="font-weight: 700; font-size: 14px;">Piotr N.</div><div style="font-size: 11px; color: #6E6E66; margin-top: 2px;">Kucharz · 32 h / 40 h</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">14:00–22:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700; background: #FAEAE6; color: #8A3A2B; border-radius: 4px; padding: 2px 4px; display: inline-block;">zamiana: Kuba</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">14:00–22:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">14:00–22:00</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">14:00–24:00</div></td>
+              <td style="padding: 8px 10px; vertical-align: top;"><div style="font-size: 12px; font-weight: 700;">14:00–22:00</div></td>
+            </tr>
+            <tr style="background: #F1F1EE; border-top: 2px solid #171714;">
+              <td style="padding: 8px 12px; border-right: 2px solid #171714;"><span style="font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8F8E86;">Razem</span><div style="font-weight: 800; font-size: 15px;">214,0 h</div></td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">30,0</td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">30,0</td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">22,0</td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">32,0</td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">40,0</td>
+              <td style="padding: 8px 10px; border-right: 2px solid #E7E7E2; font-weight: 800; font-size: 14px;">48,0</td>
+              <td style="padding: 8px 10px; font-weight: 800; font-size: 14px;">34,0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #56544f; margin: 14px 0 56px;">Grafik → widok tygodnia. Dane przykładowe.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0; border-top: 2px solid var(--color-divider);">
+      <div style="padding: 28px 28px 28px 0;">
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: 18px; margin: 0 0 10px;">Prośby o wolne i urlopy</h3>
+        <p style="font-size: 16px; line-height: 1.6; margin: 0;">Pracownik składa wniosek z telefonu, kierownik widzi go w kolejce „Wymaga Twojej decyzji”. Zatwierdzone wolne od razu blokuje termin w grafiku — nie da się wpisać komuś zmiany na urlopie.</p>
+      </div>
+      <div style="padding: 28px; border-left: 2px solid var(--color-divider);">
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: 18px; margin: 0 0 10px;">Giełda zmian</h3>
+        <p style="font-size: 16px; line-height: 1.6; margin: 0;">Zamiast negocjacji w grupie na telefonie: zmiana idzie na giełdę, ktoś ją przejmuje, kierownik akceptuje. Grafik przepisuje się sam, a ślad zostaje.</p>
+      </div>
+      <div style="padding: 28px; border-left: 2px solid var(--color-divider);">
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: 18px; margin: 0 0 10px;">Plan kontra fakt</h3>
+        <p style="font-size: 16px; line-height: 1.6; margin: 0;">Co dzień widzisz, ile godzin zaplanowano i ile faktycznie odbito. Zmiana z grafiku bez odbicia trafia do tej samej kolejki decyzji co korekty.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge) 56px;">
+    <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 48px; max-width: 22ch;">Co jeszcze dostaje lokal.</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; ">
+      <div style="">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">01</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Odbicie zmiany w dwa dotknięcia</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Pracownik dotyka swojego imienia na tablecie i startuje zmianę — bez logowania, bez hasła, opcjonalnie za czterocyfrowym PIN-em. Można też wpisać całą zmianę naraz po fakcie. Zapomniane odbicie idzie do kierownika jako korekta i nie ginie.</p>
+      </div>
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; ">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">2 dotknięcia</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">start zmiany</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; order: 1;">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2"></rect><path d="M12 18h.01"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">7 dni</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">widoczne z wyprzedzeniem</p>
+      </div>
+      <div style="order: 2;">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">02</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Grafik w kieszeni pracownika</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Opublikowany grafik pracownik widzi na telefonie razem z najbliższą zmianą i licznikiem do jej końca. Zmiany nieopublikowane zostają po stronie kierownika, więc nikt nie planuje sobie tygodnia na podstawie szkicu. Wydruk A4 na drzwi zaplecza dalej działa.</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">03</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Rejestr godzin i korekty</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Jedna kolejka decyzji: zatwierdź, popraw albo dopytaj. Każda zmiana godziny zostawia ślad w historii wpisu, a pracownik dostaje powiadomienie z imieniem kierownika, który ją podjął.</p>
+      </div>
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; ">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">3 decyzje</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">zatwierdź · popraw · zapytaj</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; order: 1;">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">1 kolejka</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">wolne, korekty i zamiany razem</p>
+      </div>
+      <div style="order: 2;">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">04</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Wnioski o wolne i urlopy</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Wniosek składa się z telefonu w kilka sekund. Kierownik ma go w kolejce decyzji razem z korektami i zamianami, a zatwierdzone wolne blokuje termin w grafiku — nikt nie wpisze zmiany komuś na urlopie.</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">05</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Zadania i sprzątanie</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Checklisty przypięte do zmiany — cykliczne, z priorytetem i dowolnymi dniami tygodnia. Pracownik widzi tylko to, co ma dziś odhaczyć; zadanie odhaczone przez jedną osobę znika całemu zespołowi. Kierownik ma kontrolę wykonania po osobach i tygodniowy postęp na Pulpicie.</p>
+      </div>
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; ">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">% dziennie</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">wykonanie po osobach</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; order: 1;">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">60–90 s</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">tyle trwa zamknięcie dnia</p>
+      </div>
+      <div style="order: 2;">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">06</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Puls — karta dnia</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Utarg, paragony, temperatury, dostawa, notatka dla następnej zmiany i opis zdarzenia, jeśli coś się wydarzyło. Reszta — godziny, koszt pracy, faktyczne otwarcie i zamknięcie, pogoda — liczy się sama.</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">07</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Terminy sanepid i umów</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Codzienna weryfikacja terminów książeczek i umów. Powiadomienie idzie do kierownika i do samego pracownika, z nazwiskiem, lokalem, datą i liczbą dni — bez wchodzenia do aplikacji.</p>
+      </div>
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; ">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">30 / 14 / 7</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">dni przed terminem</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; order: 1;">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">1 klik</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">eksport CSV</p>
+      </div>
+      <div style="order: 2;">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">08</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Raporty i koszty pracy</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Miesięczne zestawienie per osoba i per lokal, norma wynikająca z typu umowy, bilans okresu rozliczeniowego i eksport CSV do księgowości.</p>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px clamp(24px, 4vw, 72px); align-items: start; padding: 40px 0; border-top: 2px solid var(--color-divider);">
+      <div style="">
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: 15px; margin: 0 0 12px; color: var(--color-accent-700);">09</p>
+        <h3 style="font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2vw, 26px); line-height: 1.2; margin: 0 0 14px;">Tablet służbowy i telefon prywatny</h3>
+        <p style="font-size: 16px; line-height: 1.65; margin: 0; max-width: 52ch;">Jedno urządzenie stoi w lokalu: pracownik wybiera siebie z listy, opcjonalnie za PIN-em. Kto ma dostęp z własnego telefonu i które bloki widzi, ustala kierownik — per lokal, nie per osoba.</p>
+      </div>
+      <div style="border-left: 2px solid var(--color-divider); padding: 0 clamp(20px, 3vw, 44px); display: flex; flex-direction: column; gap: 16px; ">
+        <span style="color: var(--color-accent);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="10" height="14" x="3" y="8" rx="2"></rect><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2"></path><path d="M8 18h.01"></path></svg></span>
+        <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; margin: 0;">7 bloków</p>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #56544f; margin: 0;">włączasz i wyłączasz per lokal</p>
+      </div>
+    </div>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge) 56px;">
+    <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-700); margin: 0 0 16px; font-weight: 600;">Telefon pracownika</p>
+    <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px; max-width: 20ch;">Zespół nie pyta kierownika o godziny — sprawdza je sam.</h2>
+    <p style="font-size: 17px; line-height: 1.65; max-width: 58ch; margin: 0 0 40px;">Pięć zakładek na własnym telefonie albo na tablecie w lokalu: grafik, giełda zmian, własny raport godzin, prośba o poprawkę i zgłoszenie dni, w które nie można pracować. Wszystko trafia prosto do kolejki decyzji kierownika.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; font-family: 'Archivo', sans-serif;">
+
+      <div>
+        <div style="border: 2px solid var(--color-divider); background: #fff; display: flex; flex-direction: column; min-height: 560px;">
+          <div style="padding: 20px 18px 14px; background: #F1F1EE; border-bottom: 1.5px solid #B7B6AE; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-weight: 800; font-size: 19px; color: #171714;">Ola P.</span>
+            <span style="position: relative; color: #171714;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg><span style="position: absolute; top: -6px; right: -8px; background: #DE3A22; color: #fff; font-size: 10px; font-weight: 800; min-width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center;">1</span></span>
+          </div>
+          <div style="padding: 18px; flex: 1;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+              <span style="font-weight: 800; font-size: 26px; color: #171714;">Cześć, Ola</span>
+              <span style="display: flex; align-items: center; gap: 4px; color: #8F8E86; font-size: 13px; margin-top: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>17°C</span>
+            </div>
+            <p style="font-size: 13.5px; color: #6E6E66; margin: 2px 0 24px;">Kotwica · Barmanka</p>
+            <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8F8E86; margin: 0;">Twoja zmiana dziś</p>
+            <div style="height: 2.5px; background: #171714; margin-top: 8px;"></div>
+            <div style="margin-top: 12px; border: 2.5px solid #171714; border-radius: 4px; background: #E7E7E2; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-weight: 800; font-size: 19px;">16:00 – 24:00</span>
+              <span style="font-size: 13px; color: #6E6E66; text-align: right;">Barmanka<br>Kotwica</span>
+            </div>
+            <div style="margin-top: 20px; background: #DE3A22; color: #fff; border-radius: 6px; padding: 16px; font-weight: 800; font-size: 17px; text-align: center;">Rozpocznij zmianę</div>
+            <div style="margin-top: 10px; border: 2.5px solid #171714; border-radius: 6px; padding: 13px; font-weight: 700; font-size: 15px; text-align: center; color: #171714;">Zgłoś niedostępność</div>
+          </div>
+          <div style="display: flex; border-top: 1.5px solid #B7B6AE; margin-top: auto;">
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid #DE3A22; color: #DE3A22; font-size: 10.5px; font-weight: 600;">Pulpit</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zmiana</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Raport</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zadania</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Więcej</div>
+          </div>
+        </div>
+        <p style="font-size: 14px; line-height: 1.55; margin: 14px 0 0; color: #56544f;"><strong style="color: var(--color-text);">Pulpit.</strong> Najbliższa zmiana, licznik do jej końca i start jednym przyciskiem.</p>
+      </div>
+
+      <div>
+        <div style="border: 2px solid var(--color-divider); background: #fff; display: flex; flex-direction: column; min-height: 560px;">
+          <div style="padding: 20px 18px 14px; background: #F1F1EE; border-bottom: 1.5px solid #B7B6AE; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-weight: 800; font-size: 19px; color: #171714;">Grafik</span>
+            <span style="font-size: 13px; color: #6E6E66;">8–14 września</span>
+          </div>
+          <div style="padding: 18px; flex: 1;">
+            <p style="font-size: 13px; font-weight: 700; text-decoration: underline; color: #6E6E66; margin: 0 0 12px;">Pokaż wszystkich w lokalu</p>
+            <div style="border: 2.5px solid #171714; border-radius: 4px; padding: 12px; margin-bottom: 8px;">
+              <div style="font-weight: 800; font-size: 15px;">czwartek 11.09</div>
+              <div style="font-size: 14px; color: #171714; margin-top: 2px;">16:00 – 24:00 · Kotwica</div>
+            </div>
+            <div style="border: 2px solid #B7B6AE; border-radius: 4px; padding: 12px; margin-bottom: 8px; color: #6E6E66;">
+              <div style="font-weight: 800; font-size: 15px; color: #171714;">piątek 12.09</div>
+              <div style="font-size: 14px; margin-top: 2px;">16:00 – 24:00 · Kotwica</div>
+            </div>
+            <div style="border: 2px solid #B7B6AE; border-radius: 4px; padding: 12px; margin-bottom: 20px; color: #6E6E66;">
+              <div style="font-weight: 800; font-size: 15px; color: #171714;">sobota 13.09</div>
+              <div style="font-size: 13px; margin-top: 2px; background: #FDF3D4; color: #7A5B12; display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 700;">prośba o wolne — czeka</div>
+            </div>
+            <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8F8E86; margin: 0;">Giełda — możesz wziąć</p>
+            <div style="height: 2.5px; background: #171714; margin-top: 8px;"></div>
+            <div style="margin-top: 12px; border: 2.5px solid #171714; border-radius: 4px; padding: 14px; background: #FAEAE6;">
+              <div style="font-weight: 800; font-size: 16px;">niedziela 14.09 · 12:00 – 20:00</div>
+              <div style="font-size: 13px; color: #6E6E66; margin-top: 2px;">Kelnerka · Kotwica · od: Marta W.</div>
+              <div style="margin-top: 10px; border: 2.5px solid #171714; border-radius: 4px; background: #fff; padding: 8px; text-align: center; font-weight: 800; font-size: 14px;">Wezmę tę zmianę</div>
+            </div>
+          </div>
+          <div style="display: flex; border-top: 1.5px solid #B7B6AE; margin-top: auto;">
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Pulpit</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zmiana</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Raport</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zadania</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid #DE3A22; color: #DE3A22; font-size: 10.5px; font-weight: 600;">Więcej</div>
+          </div>
+        </div>
+        <p style="font-size: 14px; line-height: 1.55; margin: 14px 0 0; color: #56544f;"><strong style="color: var(--color-text);">Grafik i giełda zmian.</strong> Swój tydzień, cały lokal jednym przełącznikiem, wolne zmiany do przejęcia.</p>
+      </div>
+
+      <div>
+        <div style="border: 2px solid var(--color-divider); background: #fff; display: flex; flex-direction: column; min-height: 560px;">
+          <div style="padding: 20px 18px 14px; background: #F1F1EE; border-bottom: 1.5px solid #B7B6AE; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-weight: 800; font-size: 19px; color: #171714;">Raport</span>
+            <span style="font-size: 13px; color: #6E6E66;">wrzesień 2026</span>
+          </div>
+          <div style="padding: 18px; flex: 1;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: #E7E7E2; border-radius: 4px; padding: 14px;">
+              <span style="font-size: 13.5px; color: #6E6E66;">Razem w miesiącu</span>
+              <span style="font-weight: 800; font-size: 22px;">84,5 h</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: #E7E7E2; border-radius: 4px; padding: 14px; margin-top: 8px;">
+              <span style="font-size: 13.5px; color: #6E6E66;">Norma etatu</span>
+              <span style="font-weight: 800; font-size: 22px;">168 h</span>
+            </div>
+            <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8F8E86; margin: 24px 0 0;">Twoje zmiany</p>
+            <div style="height: 2.5px; background: #171714; margin-top: 8px;"></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #B7B6AE;">
+              <span style="font-size: 14px; font-weight: 700;">09.09 · wt</span>
+              <span style="font-size: 14px; color: #6E6E66;">16:00 – 24:00 · 8,0 h</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #B7B6AE;">
+              <span style="font-size: 14px; font-weight: 700;">08.09 · pon</span>
+              <span style="font-size: 14px; color: #6E6E66;">16:00 – 23:30 · 7,5 h</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0;">
+              <span style="font-size: 14px; font-weight: 700;">06.09 · sob</span>
+              <span style="font-size: 13px; background: #FAEAE6; color: #8A3A2B; font-weight: 700; padding: 2px 6px; border-radius: 4px;">korekta u kierownika</span>
+            </div>
+            <div style="margin-top: 18px; border: 2.5px solid #171714; border-radius: 6px; padding: 13px; font-weight: 700; font-size: 15px; text-align: center;">Popraw zmianę</div>
+          </div>
+          <div style="display: flex; border-top: 1.5px solid #B7B6AE; margin-top: auto;">
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Pulpit</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zmiana</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid #DE3A22; color: #DE3A22; font-size: 10.5px; font-weight: 600;">Raport</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Zadania</div>
+            <div style="flex: 1; text-align: center; padding: 8px 0 10px; border-top: 2.5px solid transparent; color: #8F8E86; font-size: 10.5px; font-weight: 600;">Więcej</div>
+          </div>
+        </div>
+        <p style="font-size: 14px; line-height: 1.55; margin: 14px 0 0; color: #56544f;"><strong style="color: var(--color-text);">Raport i korekty.</strong> Własne godziny, norma etatu i prośba o poprawkę wysłana w kilka sekund.</p>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #56544f; margin: 24px 0 0;">Ekrany konta pracownika. Te same widoki działają na tablecie stojącym w lokalu. Dane przykładowe.</p>
+  </section>
+
+  <hr style="height: 2px; border: 0; margin: 0; background: var(--color-divider);">
+
+  <section id="dla-pracownikow" style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; align-items: start;">
+      <div>
+        <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-700); margin: 0 0 16px; font-weight: 600;">Dla pracowników</p>
+        <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(26px, 3.2vw, 40px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px;">Chcesz mieć to u siebie w pracy? Wyślij to swojemu pracodawcy.</h2>
+        <p style="font-size: 17px; line-height: 1.65; margin: 0 0 16px;">Nie musisz nikogo przekonywać ani niczego tłumaczyć. Skopiuj gotową wiadomość, wyślij ją właścicielowi lub kierownikowi — resztę ustalimy z nim bezpośrednio.</p>
+        <p style="font-size: 17px; line-height: 1.65; margin: 0 0 28px;">Możesz też wypełnić ankietę sam, jeśli znasz odpowiedzi. Zaznacz wtedy przy roli, że jesteś pracownikiem — skontaktujemy się i poprosimy o zgodę pracodawcy.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" class="btn btn-primary" data-act="copyMessage"><span data-copy-label>Skopiuj wiadomość</span></button>
+          <a class="btn btn-secondary" href="mailto:?subject=Shiftro%20%E2%80%94%20godziny%20i%20grafik%20dla%20naszego%20lokalu&body=Cze%C5%9B%C4%87%2C%20natrafi%C5%82em/%C5%82am%20na%20Shiftro%20%E2%80%94%20aplikacj%C4%99%20do%20godzin%20i%20grafiku%20dla%20gastronomii.%20Pracownik%20odbija%20zmian%C4%99%20na%20tablecie%20w%20lokalu%20albo%20na%20telefonie%2C%20a%20kierownik%20ma%20w%20jednym%20miejscu%20grafik%2C%20ewidencj%C4%99%20godzin%2C%20koszt%20pracy%2C%20checklisty%20i%20zamkni%C4%99cie%20dnia.%0A%0ASzukaj%C4%85%20teraz%20lokali%20do%20bezp%C5%82atnych%20test%C3%B3w.%20Wdro%C5%BCenie%20zajmuje%20dzie%C5%84%2C%20nic%20nie%20trzeba%20przepisywa%C4%87%20z%20arkusza.%0A%0AStrona%20i%20ankieta%20zg%C5%82oszeniowa%3A%20shiftro.pl">Wyślij e-mailem</a>
+          <button type="button" class="btn btn-ghost" data-act="goAnkieta">Wypełnię ankietę sam</button>
+        </div>
+      </div>
+      <div style="border: 2px solid var(--color-divider); background: #fff; padding: 28px;">
+        <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8F8E86; margin: 0 0 16px;">Gotowa wiadomość</p>
+        <p style="font-size: 16px; line-height: 1.7; margin: 0 0 14px;">Cześć, natrafiłem/łam na Shiftro — aplikację do godzin i grafiku dla gastronomii. Pracownik odbija zmianę na tablecie w lokalu albo na telefonie, a kierownik ma w jednym miejscu grafik, ewidencję godzin, koszt pracy, checklisty i zamknięcie dnia.</p>
+        <p style="font-size: 16px; line-height: 1.7; margin: 0 0 14px;">Szukają teraz lokali do bezpłatnych testów. Wdrożenie zajmuje dzień, nic nie trzeba przepisywać z arkusza.</p>
+        <p style="font-size: 16px; line-height: 1.7; margin: 0;">Strona i ankieta zgłoszeniowa: shiftro.pl</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--color-accent); color: #fff;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 88px var(--edge);">
+      <p style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(32px, 5vw, 64px); line-height: 1.06; letter-spacing: -0.02em; margin: 0; max-width: 18ch;">Zeszyt nie powie Ci, ile kosztowała sobota.</p>
+      <p style="font-size: 18px; line-height: 1.6; max-width: 52ch; margin: 28px 0 32px;">Shiftro powstało w czterech lokalach, w trakcie zmian, obok sali. Szukamy kolejnych, które chcą je testować razem z nami.</p>
+      <button type="button" class="btn" style="background: #fff; color: var(--color-accent); border: 2px solid #fff;" data-act="goAnkieta">Zgłoś lokal do testów</button>
+    </div>
+  </section>
+  </div>
+  </div>
+
+  <div data-when="onAnkieta" style="display:contents" hidden>
+  <section id="ankieta" style="background: var(--color-neutral-200); border-top: 2px solid var(--color-divider);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 72px var(--edge);">
+      <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-700); margin: 0 0 16px; font-weight: 600;">Zgłoszenie do testów · krok 2 z 2</p>
+      <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px; max-width: 20ch;">Ankieta — powiedz nam o swoim lokalu.</h2>
+      <p style="font-size: 17px; line-height: 1.65; max-width: 56ch; margin: 0 0 48px;">Dwie minuty. Odpowiedzi decydują o tym, czy Shiftro w ogóle pasuje do tego, jak pracujecie — odpiszemy nawet wtedy, gdy naszym zdaniem nie pasuje.</p>
+
+      <div data-when="sent" style="display:contents" hidden>
+        <div style="border: 2px solid var(--color-divider); background: #fff; padding: 40px; max-width: 640px;">
+          <p style="font-family: var(--font-heading); font-weight: 800; font-size: 24px; margin: 0 0 12px;">Dziękujemy — zgłoszenie przyjęte.</p>
+          <p style="font-size: 17px; line-height: 1.65; margin: 0 0 24px;">Odezwiemy się w ciągu dwóch dni roboczych na podany adres. Jeśli w międzyczasie zmieni się coś po Waszej stronie, po prostu odpisz na naszą wiadomość.</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" data-act="reset">Wypełnij kolejne zgłoszenie</button>
+            <button type="button" class="btn btn-ghost" data-act="goLanding">Wróć na stronę</button>
+          </div>
+        </div>
+      </div>
+
+      <div data-when="notSent" style="display:contents">
+        <form id="ankieta-form" novalidate="false" style="display: grid; gap: 40px; max-width: 900px;">
+          <div>
+            <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 17px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px;">1 · Lokal</h3>
+            <hr style="height: 2px; border: 0; margin: 0 0 24px; background: var(--color-divider);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+              <div class="field">
+                <label for="nazwa">Nazwa lokalu lub sieci</label>
+                <input class="input" id="nazwa" name="nazwa" type="text" placeholder="np. Kotwica" required="required">
+              </div>
+              <div class="field">
+                <label for="miasto">Miasto</label>
+                <input class="input" id="miasto" name="miasto" type="text" placeholder="np. Gdańsk" required="required">
+              </div>
+              <div class="field">
+                <label for="typ">Typ lokalu</label>
+                <select class="input" id="typ" name="typ" required="required">
+                  <option value="">Wybierz…</option>
+                  <option>Restauracja</option>
+                  <option>Kawiarnia</option>
+                  <option>Bar / pub</option>
+                  <option>Sushi</option>
+                  <option>Pizzeria</option>
+                  <option>Piekarnia / cukiernia</option>
+                  <option>Food truck</option>
+                  <option>Catering / stołówka</option>
+                  <option>Inne</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="lokale">Liczba lokali</label>
+                <select class="input" id="lokale" name="lokale" required="required">
+                  <option value="">Wybierz…</option>
+                  <option>1</option>
+                  <option>2–3</option>
+                  <option>4–6</option>
+                  <option>7 i więcej</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="pracownicy">Liczba pracowników</label>
+                <select class="input" id="pracownicy" name="pracownicy" required="required">
+                  <option value="">Wybierz…</option>
+                  <option>do 5</option>
+                  <option>6–15</option>
+                  <option>16–30</option>
+                  <option>31–60</option>
+                  <option>powyżej 60</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="ewidencja">Jak dziś prowadzicie ewidencję godzin</label>
+                <select class="input" id="ewidencja" name="ewidencja" required="required">
+                  <option value="">Wybierz…</option>
+                  <option>Zeszyt / kartka w lokalu</option>
+                  <option>Excel lub Arkusze Google</option>
+                  <option>Formularz Google</option>
+                  <option>Inny system / aplikacja</option>
+                  <option>Nie prowadzimy jej wcale</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 17px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px;">2 · Jak pracujecie</h3>
+            <hr style="height: 2px; border: 0; margin: 0 0 24px; background: var(--color-divider);">
+            <div style="display: grid; gap: 24px;">
+              <div class="field">
+                <label for="bol">Co w grafiku boli Was najbardziej</label>
+                <textarea class="input" id="bol" name="bol" rows="4" placeholder="np. ktoś nie przyszedł i dowiadujemy się o tym z sali; nie wiem, ile realnie kosztuje weekend"></textarea>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+                <div class="field">
+                  <label>Czy w lokalu jest tablet lub stary telefon</label>
+                  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <label class="radio"><input type="radio" name="tablet" value="tak"><span class="dot"></span>Tak, jest i stoi na stałe</label>
+                    <label class="radio"><input type="radio" name="tablet" value="nie"><span class="dot"></span>Nie ma, ale możemy dokupić</label>
+                    <label class="radio"><input type="radio" name="tablet" value="telefony"><span class="dot"></span>Wolimy tylko telefony pracowników</label>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="start">Kiedy moglibyście zacząć test</label>
+                  <select class="input" id="start" name="start" required="required">
+                    <option value="">Wybierz…</option>
+                    <option>Od zaraz</option>
+                    <option>W ciągu 2 tygodni</option>
+                    <option>W tym miesiącu</option>
+                    <option>Po sezonie / później</option>
+                    <option>Najpierw chcemy zobaczyć demo</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="font-family: var(--font-heading); font-weight: 800; font-size: 17px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px;">3 · Kontakt dla Shiftro</h3>
+            <hr style="height: 2px; border: 0; margin: 0 0 24px; background: var(--color-divider);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+              <div class="field">
+                <label for="imie">Imię i nazwisko</label>
+                <input class="input" id="imie" name="imie" type="text" required="required">
+              </div>
+              <div class="field">
+                <label for="rola">Rola w lokalu</label>
+                <select class="input" id="rola" name="rola" required="required">
+                  <option value="">Wybierz…</option>
+                  <option>Właściciel / właścicielka</option>
+                  <option>Kierownik lokalu</option>
+                  <option>Kierownik zmiany</option>
+                  <option>Pracownik</option>
+                  <option>Księgowość / kadry</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input class="input" id="email" name="email" type="email" placeholder="imie@lokal.pl" required="required">
+              </div>
+              <div class="field">
+                <label for="telefon">Telefon</label>
+                <input class="input" id="telefon" name="telefon" type="tel" placeholder="+48 600 000 000">
+              </div>
+              <div class="field">
+                <label for="pora">Dogodna pora kontaktu</label>
+                <select class="input" id="pora" name="pora">
+                  <option value="">Bez znaczenia</option>
+                  <option>Rano, 8:00–11:00</option>
+                  <option>Popołudnie, 12:00–16:00</option>
+                  <option>Wieczór, 17:00–20:00</option>
+                </select>
+              </div>
+            </div>
+            <label class="radio" style="margin-top: 24px; align-items: flex-start; max-width: 62ch;">
+              <input type="checkbox" name="zgoda" required="required">
+              <span class="dot"></span>
+              <span style="font-size: 15px; line-height: 1.55;">Zgadzam się na kontakt i przetwarzanie podanych danych w celu obsługi zgłoszenia do testów Shiftro. Dane nie są przekazywane dalej i możesz je w każdej chwili wycofać.</span>
+            </label>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Wyślij zgłoszenie</button>
+            <span id="form-error" role="alert" hidden style="font-size:14px;font-weight:600;color:var(--color-accent-700);"></span>
+            <span style="font-size: 14px; color: #56544f;">Odpowiadamy w ciągu dwóch dni roboczych.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <footer style="border-top: 2px solid var(--color-divider); background: var(--color-bg);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 32px var(--edge); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="22" height="22" viewBox="0 0 100 100" role="img" aria-label="Shiftro">
+          <rect width="100" height="100" fill="#171714"></rect>
+          <rect x="18" y="26" width="52" height="15" fill="#F1F1EE"></rect>
+          <rect x="30" y="47" width="52" height="15" fill="#DE3A22"></rect>
+          <rect x="18" y="68" width="30" height="15" fill="#F1F1EE"></rect>
+        </svg>
+        <span style="font-size: 14px; font-weight: 600;">Shiftro · shiftro.pl</span>
+      </div>
+      <span style="font-size: 13px; color: #56544f;">Ewidencja czasu pracy i grafik dla gastronomii</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── Gdzie lecą zgłoszenia ────────────────────────────────────────────────
+  // Formspree: załóż formularz na formspree.io, wklej TU samo id z adresu
+  // (https://formspree.io/f/XXXXXXXX  ->  "XXXXXXXX").
+  // Dopóki stoi placeholder, formularz NIE udaje, że wysłał — pokazuje błąd
+  // z adresem zapasowym. Cicha "wysyłka" donikąd gubi zgłoszenia bez śladu.
+  var FORMSPREE_ID = "xjyvlonw";
+  var KONTAKT_EMAIL = "roman.zaluskyi@gmail.com";
+
+  var MESSAGE = [
+    "Cześć, natrafiłem/łam na Shiftro — aplikację do godzin i grafiku dla gastronomii. Pracownik odbija zmianę na tablecie w lokalu albo na telefonie, a kierownik ma w jednym miejscu grafik, ewidencję godzin, koszt pracy, checklisty i zamknięcie dnia.",
+    "Szukają teraz lokali do bezpłatnych testów. Wdrożenie zajmuje dzień, nic nie trzeba przepisywać z arkusza.",
+    "Strona i ankieta zgłoszeniowa: shiftro.pl"
+  ].join("\n\n");
+
+  // Nazwy pól po polsku — w mailu ma stać "Liczba pracowników", nie "pracownicy".
+  var LABELS = {
+    nazwa: "Lokal lub sieć",
+    miasto: "Miasto",
+    typ: "Typ lokalu",
+    lokale: "Liczba lokali",
+    pracownicy: "Liczba pracowników",
+    ewidencja: "Jak dziś prowadzą ewidencję",
+    bol: "Co boli w grafiku",
+    tablet: "Tablet w lokalu",
+    start: "Kiedy mogą zacząć",
+    imie: "Imię i nazwisko",
+    rola: "Rola w lokalu",
+    email: "E-mail",
+    telefon: "Telefon",
+    pora: "Dogodna pora kontaktu",
+    zgoda: "Zgoda na kontakt"
+  };
+
+  var state = { page: "landing", sent: false, copied: false };
+
+  function render() {
+    var vals = {
+      onLanding: state.page === "landing",
+      onAnkieta: state.page === "ankieta",
+      sent: state.sent,
+      notSent: !state.sent
+    };
+    document.querySelectorAll("[data-when]").forEach(function (el) {
+      el.hidden = !vals[el.dataset.when];
+    });
+    document.querySelectorAll("[data-copy-label]").forEach(function (el) {
+      el.textContent = state.copied ? "Skopiowano" : "Skopiuj wiadomość";
+    });
+  }
+
+  var actions = {
+    goAnkieta: function () { state.page = "ankieta"; render(); window.scrollTo({ top: 0 }); },
+    goLanding: function () { state.page = "landing"; render(); window.scrollTo({ top: 0 }); },
+    reset: function () { state.sent = false; render(); var f = document.getElementById("ankieta-form"); if (f) f.reset(); },
+    copyMessage: function () {
+      var done = function () {
+        state.copied = true; render();
+        setTimeout(function () { state.copied = false; render(); }, 2200);
+      };
+      if (navigator.clipboard) navigator.clipboard.writeText(MESSAGE).then(done, done);
+      else done();
+    }
+  };
+
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-act]");
+    if (!el) return;
+    var fn = actions[el.dataset.act];
+    if (fn) { e.preventDefault(); fn(); }
+  });
+
+  // Czytelna wartość pola: z <select> bierzemy TEKST opcji, nie value —
+  // inaczej w mailu ląduje "b2b" zamiast "Bar / pub".
+  function readable(form, name) {
+    var el = form.elements[name];
+    if (!el) return "";
+    if (el instanceof RadioNodeList || (el.length && !el.tagName)) {
+      var checked = Array.prototype.find.call(el, function (i) { return i.checked; });
+      if (!checked) return "";
+      var lab = checked.closest("label");
+      return lab ? lab.textContent.trim() : checked.value;
+    }
+    if (el.tagName === "SELECT") return el.selectedOptions[0] ? el.selectedOptions[0].text.trim() : "";
+    if (el.type === "checkbox") return el.checked ? "Tak" : "Nie";
+    return (el.value || "").trim();
+  }
+
+  var form = document.getElementById("ankieta-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var btn = document.getElementById("submit-btn");
+      var err = document.getElementById("form-error");
+
+      function fail(msg) {
+        if (!err) return;
+        err.innerHTML = msg + ' Napisz proszę na <a href="mailto:' + KONTAKT_EMAIL + '">' + KONTAKT_EMAIL + "</a>.";
+        err.hidden = false;
+        if (btn) { btn.disabled = false; btn.textContent = "Wyślij zgłoszenie"; }
+      }
+
+      if (err) err.hidden = true;
+      if (btn) { btn.disabled = true; btn.textContent = "Wysyłanie…"; }
+
+      var payload = { _subject: "Shiftro — zgłoszenie do testów: " + (readable(form, "nazwa") || "(bez nazwy)") };
+      Object.keys(LABELS).forEach(function (name) {
+        var v = readable(form, name);
+        if (v) payload[LABELS[name]] = v;
+      });
+      payload.email = readable(form, "email"); // Formspree ustawia z tego reply-to
+
+      if (FORMSPREE_ID === "TWOJE_ID") {
+        fail("Formularz nie jest jeszcze podłączony.");
+        return;
+      }
+
+      fetch("https://formspree.io/f/" + FORMSPREE_ID, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        state.sent = true;
+        render();
+        if (btn) { btn.disabled = false; btn.textContent = "Wyślij zgłoszenie"; }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }).catch(function () {
+        fail("Nie udało się wysłać zgłoszenia.");
+      });
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
