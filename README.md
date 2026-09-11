@@ -63,3 +63,97 @@ Jedna drobna rozbieżność, świadomie zostawiona: pasek zakładek na makietach
 telefonu ma 5 pozycji (Pulpit · Zmiana · Raport · Zadania · Więcej), a aplikacja
 ma 6 — brakuje "Grafik". Jeśli chcesz zgodności co do joty, dopisz szóstą
 pozycję w trzech makietach telefonu.
+
+## Rysunki
+
+Cztery ilustracje na stronie są **ręcznie napisanym SVG wprost w `index.html`**,
+nie plikami i nie zdjęciami. Ta sama paleta co reszta: `#171714` / `#605D5D` /
+`#BAB6B6` na paski, `#DE3A22` wyłącznie na jedną rzecz na rysunek, zero
+zaokrągleń.
+
+- **Rytm tygodnia** (pod hero) — zmiany trzech stanowisk na osi 8:00–24:00,
+  z zaznaczoną dziurą w obsadzie w środę. Liczby zmian w kolejnych dniach
+  zgadzają się z nagłówkami tabeli grafiku niżej na stronie (4, 4, ·, 4, 5, 6,
+  4) — jeśli zmieniasz jedno, zmień drugie, inaczej strona przeczy sama sobie.
+  ⚠️ Ten pas ma proporcje 5,3:1, więc na telefonie zszedłby do 60px wysokości
+  (paski po 4px). Ma **drugą wersję**: poniżej 860px wchodzi `.rytm-waski` —
+  ten sam tydzień obrócony, dzień to wiersz, godziny lecą w poprzek. Mieści
+  siedem dni w pionie telefonu bez przewijania. Przewijany pas w poziomie,
+  który tu był wcześniej, zawsze pokazuje kawałek i udaje, że to całość.
+- **Trzy urządzenia** (nad listą 01–09) — tablet na barze, telefon pracownika,
+  karta dnia. Proporcje 4:3, skalują się bez żadnych sztuczek.
+- **Dziewięć miniatur 116×72** w wierszach cech 01–09, po jednej na cechę.
+  Zastąpiły ikonki z zestawu ogólnego: ikonka „zegar" przy odbiciu zmiany i
+  „dokument" przy raportach mogą stać przy czymkolwiek, a te pokazują
+  mechanizm, o którym mówi akapit obok. Kolejność miniatur MUSI odpowiadać
+  kolejności nagłówków — skrypt podmieniający to sprawdza.
+
+Generator leży obok, w `grafika.py` — to on złożył te SVG z listy zmian i
+kolorów. Do działania strony nie jest potrzebny (rysunki są już wbudowane w
+`index.html`), ale poprawianie rysunków ręcznie w 4000 znakach `<rect>` jest
+drogą donikąd: zmień dane w `grafika.py`, uruchom `python3 grafika.py out.json`
+i podmień.
+
+## Rytm pasm
+
+Sekcje idą naprzemiennie: tło → `--color-surface` → tło → `--color-surface` →
+tło → **ciemny `#171714`** → tło → `--color-surface` → **czerwony**. Tło siedzi
+na `<section>`, a `max-width: 1200px` zeszło na wewnętrzny `<div>` — inaczej pas
+kończyłby się na 1200px zamiast iść przez cały ekran.
+
+Poziome `<hr>` MIĘDZY sekcjami zniknęły: przy zmianie koloru kreska na styku
+wygląda jak pomyłka, a nie jak podział. Te, które zostały, są wewnątrz
+formularza ankiety i dzielą jego części — to co innego.
+
+Ciemny pas wypada dokładnie tam, gdzie strona przechodzi od kierownika do
+pracownika. To nie ozdoba: to granica dwóch części opowieści, i dlatego akurat
+tam. Kontrast tekstu na nim sprawdzony — 15,9 dla nagłówków, 8,9 dla podpisów,
+6,4 dla nadtytułu.
+
+## Pasek liczb pod hero
+
+Z siedmiu kafli zostały **trzy**: 0 zł, 1 dzień, 4 lokale. Odpadło to, co mówi
+coś o produkcie, a nic czytelnikowi — „13 zakładek panelu kierownika",
+„30 / 14 / 7 dni przypomnień", „60–90 s zamknięcie dnia" (w tym miejscu strony
+nikt jeszcze nie wie, co to zamknięcie dnia) i „2 min ankieta", która wróciła
+tam, gdzie znaczy coś konkretnego — obok przycisku wysyłki.
+
+Każda liczba ma teraz pod sobą ZDANIE, nie etykietę wersalikami. Liczba bez
+zdania obok jest ozdobą: „4 lokale" nie mówi nic, „4 lokale pracują na tym
+codziennie, na sali — to nie jest prezentacja" mówi wszystko.
+
+## ⚠️ Kolor na ciemnym pasie
+
+`color` ustawiony na `<section>` **wcieka do makiet w środku**. Ciemny pas raz
+już to zrobił: dziesięć elementów w białych makietach telefonów (godziny,
+„Popraw zmianę", „84,5 h") odziedziczyło jasny kolor i zrobiło się niewidoczne
+na białym. Dlatego każdy biały kontener makiety ma własne
+`color: var(--color-text)`.
+
+Sprawdzając kontrast, licz go dla **całej** strony bez filtrów. Pierwsza
+kontrola tego błędu nie złapała, bo wykluczała elementy na białym tle — czyli
+dokładnie te, które były zepsute.
+
+## Nagłówki bez kropek
+
+Nagłówki (h1/h2/h3 i przekaz w ostatniej sekcji) nie kończą się kropką.
+Nagłówek nie jest zdaniem — kropka każe go czytać jak zdanie i spowalnia.
+Znak zapytania zostaje, bo pyta naprawdę.
+
+Ostatnia sekcja to sam przekaz i przycisk: akapit, który tam stał, powtarzał
+to, co strona powiedziała już dwa razy wyżej. W miejscu, w którym prosisz o
+decyzję, każde dodatkowe zdanie jest powodem, żeby jej nie podjąć.
+
+## Przyklejony nagłówek — tylko od 861px
+
+`.naglowek` dostaje `position: sticky` wyłącznie w media query od 861px (tej
+samej granicy co wariant rytmu tygodnia — jedna liczba w całym pliku jest
+łatwiejsza do trzymania niż trzy). Na telefonie zostaje `static`: 73px na stałe
+to jedna piąta ekranu, a strona jest krótka.
+
+Dwie rzeczy, bez których to nie działa:
+- **Tło musi być nieprzezroczyste** (`var(--color-bg)`). Pasma przewijają się
+  POD nagłówkiem; bez tła ciemny pas przechodziłby przez napisy.
+- **`scroll-margin-top: 88px` na `#produkt` i `#dla-pracownikow`.** Bez tego
+  kotwica z menu zatrzymuje się ZA nagłówkiem i pierwsze wiersze sekcji są
+  zasłonięte. 88 = 73px wysokości nagłówka plus oddech.
