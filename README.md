@@ -154,6 +154,34 @@ to jedna piąta ekranu, a strona jest krótka.
 Dwie rzeczy, bez których to nie działa:
 - **Tło musi być nieprzezroczyste** (`var(--color-bg)`). Pasma przewijają się
   POD nagłówkiem; bez tła ciemny pas przechodziłby przez napisy.
-- **`scroll-margin-top: 88px` na `#produkt` i `#dla-pracownikow`.** Bez tego
+- **`scroll-margin-top: 88px` na `#dla-restauracji` i `#dla-pracownikow`.** Bez tego
   kotwica z menu zatrzymuje się ZA nagłówkiem i pierwsze wiersze sekcji są
   zasłonięte. 88 = 73px wysokości nagłówka plus oddech.
+
+## Nagłówek odjechany od góry
+
+Tło nagłówka jest stałe (`#F1F1EE`) i nigdy się nie zmienia — zmienia się to,
+co pod niego wjeżdża. Na tle strony go nie widać, ale nad szarym pasmem i nad
+ciemnym jasny pasek z włosową kreską pod spodem wygląda jak przypadek.
+
+Dlatego `.naglowek.odjechany` dostaje **pełną kreskę** w kolorze tekstu zamiast
+cienia: ta strona rozdziela wszystko kreskami 2px, a miękki cień byłby z innego
+języka. Klasę przypina słuchacz `scroll` (`window.scrollY > 4`).
+
+⚠️ Reguła ma `!important` i to jedyne takie miejsce w pliku. Nagłówek ma
+`border-bottom` w stylu **inline**, a inline bije regułę klasy — bez
+`!important` klasa przypinała się, kolor się nie zmieniał, i wyglądało to na
+niedziałający JavaScript.
+
+⚠️ Sprawdzając to w podglądzie: programowy `window.scrollTo` z wstrzykniętego
+skryptu NIE wysyła w tej panelce zdarzenia `scroll`, więc klasa się nie
+przypina i wygląda na zepsutą. Prawdziwe kółko myszy działa. Testuj kółkiem.
+
+## Kotwice
+
+`Produkt` w menu nazywa się teraz **`Dla restauracji`** — razem z
+`Dla pracowników` mówi czytelnikowi, dla KOGO jest każda część; „Produkt" mówił
+tylko, że produkt istnieje. Kotwica poszła za etykietą: `#produkt` →
+`#dla-restauracji`. Stare adresy z `#produkt` przestaną skakać do sekcji
+(otworzą stronę od góry) — jeśli taki link gdzieś krąży, to jest ten moment,
+żeby go podmienić.
