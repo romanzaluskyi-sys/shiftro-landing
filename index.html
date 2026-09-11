@@ -173,8 +173,12 @@ textarea.input { min-height: 90px; resize: vertical; }
     position: sticky; top: 0; z-index: 50;
     background: var(--color-bg);
   }
+  /* Odjechany od góry nagłówek dostaje pełną kreskę zamiast włosowej:
+     nad szarym pasem i nad ciemnym jasny pasek bez wyraźnej krawędzi
+     wygląda jak pomyłka, a nie jak pasek nawigacji. */
+  .naglowek.odjechany { border-bottom-color: var(--color-text) !important; }
   /* Kotwice muszą zatrzymać się POD nagłówkiem, nie za nim. */
-  #produkt, #dla-pracownikow { scroll-margin-top: 88px; }
+  #dla-restauracji, #dla-pracownikow { scroll-margin-top: 88px; }
 }
 @media (max-width: 860px) {
   .rytm-szeroki { display: none; }
@@ -197,7 +201,7 @@ textarea.input { min-height: 90px; resize: vertical; }
     </div>
     <nav style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
       <div data-when="onLanding" style="display:contents">
-        <a href="#produkt" style="font-size: 14px; font-weight: 600; text-decoration: none; color: var(--color-text);">Produkt</a>
+        <a href="#dla-restauracji" style="font-size: 14px; font-weight: 600; text-decoration: none; color: var(--color-text);">Dla restauracji</a>
       </div>
       <div data-when="onLanding" style="display:contents">
         <a href="#dla-pracownikow" style="font-size: 14px; font-weight: 600; text-decoration: none; color: var(--color-text);">Dla pracowników</a>
@@ -218,7 +222,7 @@ textarea.input { min-height: 90px; resize: vertical; }
     <p style="font-size: 16px; line-height: 1.75; max-width: 62ch; margin: 0 0 32px;">Grafik, który żyje przez cały tydzień: układasz obsadę, pracownicy proszą o wolne i wymieniają się zmianami, a system pilnuje dziur w obsadzie i urlopów. Odbicie zmiany to jedno dotknięcie na tablecie w lokalu albo na własnym telefonie — nic nie przepisujesz z arkusza.</p>
     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
       <button type="button" class="btn btn-primary" data-act="goAnkieta">Wypełnij ankietę zgłoszeniową</button>
-      <a href="#produkt" class="btn btn-secondary">Zobacz, jak to wygląda</a>
+      <a href="#dla-restauracji" class="btn btn-secondary">Zobacz, jak to wygląda</a>
     </div>
     <figure style="margin: 72px 0 0;">
       <div class="rytm-szeroki"><svg viewBox="0 0 1204 220" width="100%" style="display:block;height:auto;" role="img" aria-label="Tydzień pracy lokalu: zmiany ułożone na osi godzin, ze zaznaczoną dziurą w obsadzie w środę między 12:00 a 15:00"><rect x="390.5" y="18" width="29.6" height="172" fill="#FAEAE6"/><line x1="390.5" y1="18" x2="390.5" y2="190" stroke="#DE3A22" stroke-width="2"/><line x1="420.1" y1="18" x2="420.1" y2="190" stroke="#DE3A22" stroke-width="2"/><text x="405.3" y="10" text-anchor="middle" font-family="Archivo, sans-serif" font-size="12" font-weight="800" fill="#DE3A22">brak 12–15</text><rect x="7.0" y="30" width="79.0" height="16" fill="#171714"/><rect x="26.8" y="56" width="79.0" height="16" fill="#605D5D"/><rect x="66.2" y="82" width="79.0" height="16" fill="#BAB6B6"/><rect x="86.0" y="108" width="79.0" height="16" fill="#171714"/><text x="7.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">PON</text><rect x="179.0" y="30" width="79.0" height="16" fill="#171714"/><rect x="198.8" y="56" width="79.0" height="16" fill="#605D5D"/><rect x="238.2" y="82" width="79.0" height="16" fill="#BAB6B6"/><rect x="267.9" y="108" width="69.1" height="16" fill="#605D5D"/><text x="179.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">WT</text><line x1="172.0" y1="18" x2="172.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><rect x="351.0" y="30" width="39.5" height="16" fill="#171714"/><rect x="420.1" y="56" width="49.4" height="16" fill="#605D5D"/><rect x="430.0" y="82" width="79.0" height="16" fill="#BAB6B6"/><text x="351.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">ŚR</text><line x1="344.0" y1="18" x2="344.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><rect x="523.0" y="30" width="79.0" height="16" fill="#171714"/><rect x="562.5" y="56" width="98.8" height="16" fill="#605D5D"/><rect x="582.2" y="82" width="79.0" height="16" fill="#BAB6B6"/><rect x="602.0" y="108" width="79.0" height="16" fill="#171714"/><text x="523.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">CZW</text><line x1="516.0" y1="18" x2="516.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><rect x="695.0" y="30" width="79.0" height="16" fill="#171714"/><rect x="734.5" y="56" width="98.8" height="16" fill="#605D5D"/><rect x="754.2" y="82" width="98.8" height="16" fill="#BAB6B6"/><rect x="774.0" y="108" width="79.0" height="16" fill="#171714"/><rect x="793.8" y="134" width="59.2" height="16" fill="#BAB6B6"/><text x="695.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">PT</text><line x1="688.0" y1="18" x2="688.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><rect x="867.0" y="30" width="79.0" height="16" fill="#171714"/><rect x="886.8" y="56" width="79.0" height="16" fill="#605D5D"/><rect x="906.5" y="82" width="79.0" height="16" fill="#BAB6B6"/><rect x="926.2" y="108" width="79.0" height="16" fill="#171714"/><rect x="946.0" y="134" width="79.0" height="16" fill="#605D5D"/><rect x="965.8" y="160" width="59.2" height="16" fill="#BAB6B6"/><text x="867.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">SOB</text><line x1="860.0" y1="18" x2="860.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><rect x="1048.9" y="30" width="79.0" height="16" fill="#171714"/><rect x="1078.5" y="56" width="79.0" height="16" fill="#605D5D"/><rect x="1098.2" y="82" width="79.0" height="16" fill="#BAB6B6"/><rect x="1118.0" y="108" width="79.0" height="16" fill="#171714"/><text x="1039.0" y="212" font-family="Archivo, sans-serif" font-size="11" font-weight="800" letter-spacing="1.4" fill="#6E6E66">ND</text><line x1="1032.0" y1="18" x2="1032.0" y2="190" stroke="#B7B6AE" stroke-width="1"/><line x1="0" y1="190" x2="1204" y2="190" stroke="#171714" stroke-width="2"/></svg></div>
@@ -248,7 +252,7 @@ textarea.input { min-height: 90px; resize: vertical; }
   </section>
 
 
-  <section id="produkt" style="max-width: 1200px; margin: 0 auto; padding: 100px var(--edge) 84px;">
+  <section id="dla-restauracji" style="max-width: 1200px; margin: 0 auto; padding: 100px var(--edge) 84px;">
     <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-700); margin: 0 0 16px; font-weight: 600;">Panel kierownika</p>
     <h2 style="font-family: var(--font-heading); font-weight: 800; font-size: clamp(24px, 2.5vw, 33px); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 26px; max-width: 20ch;">Dziś w liczbach, zanim ktokolwiek o to zapyta</h2>
     <p style="font-size: 15.5px; line-height: 1.75; max-width: 60ch; margin: 0 0 56px;">Ekran, który kierownik widzi po zalogowaniu: godziny, koszt miesiąca, plan vs fakt za wczoraj i kolejka rzeczy czekających na decyzję.</p>
@@ -1036,6 +1040,13 @@ textarea.input { min-height: 90px; resize: vertical; }
       else done();
     }
   };
+
+  var naglowek = document.querySelector(".naglowek");
+  var odjechany = function () {
+    naglowek.classList.toggle("odjechany", window.scrollY > 4);
+  };
+  window.addEventListener("scroll", odjechany, { passive: true });
+  odjechany();
 
   document.addEventListener("click", function (e) {
     var el = e.target.closest("[data-act]");
