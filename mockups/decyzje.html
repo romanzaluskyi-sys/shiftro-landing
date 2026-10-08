@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.sub { color: var(--muted); margin: 6px 0 18px; }
+.f { display: flex; gap: 8px; margin-bottom: 28px; }
+.sh { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; }
+.sh a { margin-left: auto; font-size: 15px; font-weight: 400; }
+.sd { color: var(--muted); font-size: 14px; margin: 8px 0 14px; }
+.it { display: grid; grid-template-columns: 34px 210px 1fr auto; align-items: center; gap: 16px; padding: 16px 20px; margin-bottom: 12px; }
+.cb { width: 22px; height: 22px; border: 2px solid var(--ink); border-radius: 5px; }
+.who b { font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.who small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; margin-top: 3px; }
+.who em { font-style: normal; display: block; color: var(--warn); font-weight: 700; font-size: 13px; margin-top: 4px; }
+.cols { display: flex; gap: 26px; align-items: flex-start; }
+.cols b { display: block; font-size: 16.5px; margin-top: 4px; }
+.lbl { font-size: 11.5px; }
+.step { color: var(--ink); display: flex; align-items: center; height: 40px; border: 2px solid var(--ink); border-radius: 8px; }
+.step span { width: 34px; text-align: center; font-size: 18px; }
+.step b { width: 60px; text-align: center; margin: 0 !important; font-size: 16.5px; }
+.tt { display: flex; align-items: center; gap: 8px; color: var(--soft); }
+.acts { display: flex; gap: 8px; }
+.acts .btn { height: 44px; }
+.note { display: inline-flex; align-items: center; gap: 6px; background: var(--sunk); border-radius: 6px; padding: 4px 9px; font-size: 13px; font-weight: 700; margin-top: 10px; }
+</style></head>
+<body>
+<main class="main" id="main">
+  <h1 class="t">Do decyzji · 6</h1>
+  <p class="sub">Cała sieć · najstarsza sprawa czeka 3 dni</p>
+  <div class="f"><span class="chip on">Wszystkie <em>6</em></span><span class="chip">Brak odbicia <em>2</em></span><span class="chip">Wolne <em>2</em></span><span class="chip">Korekty <em>2</em></span></div>
+
+  <div class="sh"><i data-i="clock" data-s="19"></i>Był w grafiku, nie odbił · 2<a>Zaznacz wszystkie</a></div>
+  <p class="sd">Zwykle zapomniany tablet. Sprawdź godziny i dopisz — bez decyzji nie trafią na wypłatę.</p>
+  <div class="card it"><span class="cb"></span><div class="who"><b>Szymon</b><small><span class="st ZM">ZM</span>Lipowa 12 · Zmywak</small><em>Czeka 3 dni</em></div>
+    <div class="cols"><div><span class="lbl">Dzień</span><b>ndz 4.10</b></div><div><span class="lbl">Godziny do dopisania</span><div class="tt" style="margin-top:4px"><span class="step"><span>−</span><b>17:00</b><span>+</span></span>–<span class="step"><span>−</span><b>24:00</b><span>+</span></span></div></div></div>
+    <div class="acts"><span class="btn"><i data-i="x"></i>Nie było zmiany</span><span class="btn red"><i data-i="chk"></i>Dopisz 7 h</span></div></div>
+  <div class="card it"><span class="cb"></span><div class="who"><b>Magda</b><small><span class="st KE">KE</span>Bar Przystań · Kelnerka</small></div>
+    <div class="cols"><div><span class="lbl">Dzień</span><b>pt 9.10</b></div><div><span class="lbl">Godziny do dopisania</span><div class="tt" style="margin-top:4px"><span class="step"><span>−</span><b>16:00</b><span>+</span></span>–<span class="step"><span>−</span><b>22:30</b><span>+</span></span></div></div></div>
+    <div class="acts"><span class="btn"><i data-i="x"></i>Nie było zmiany</span><span class="btn red"><i data-i="chk"></i>Dopisz 6,5 h</span></div></div>
+
+  <div class="sh" style="margin-top:26px"><i data-i="sun" data-s="19"></i>Wnioski o wolne · 2<a>Zaznacz wszystkie</a></div>
+  <p class="sd">Urlop dopisuje 8 h za każdy dzień roboczy. Niedostępność tylko blokuje termin w Grafiku.</p>
+  <div class="card it"><span class="cb"></span><div class="who"><b>Kuba <span class="pill info">Urlop</span></b><small><span class="st KU">KU</span>Lipowa 12 · Kucharz</small></div>
+    <div class="cols"><div><span class="lbl">Termin</span><b>26.10 – 30.10.2026</b></div><div><span class="lbl">Dni robocze</span><b>5</b></div><div><span class="lbl">Do godzin</span><b>+40 h</b></div></div>
+    <div class="acts"><span class="btn"><i data-i="x"></i>Odrzuć</span><span class="btn red"><i data-i="chk"></i>Zatwierdź</span></div></div>
+  <div class="card it"><span class="cb"></span><div class="who"><b>Julia <span class="pill grey">Niedostępność</span></b><small><span class="st HO">HO</span>Lipowa 12 · Hostessa</small></div>
+    <div><div class="cols"><div><span class="lbl">Termin</span><b>sob 7.11.2026</b></div><div><span class="lbl">Dni robocze</span><b>0</b></div><div><span class="lbl">Do godzin</span><b>—</b></div></div><span class="note"><i data-i="lock" data-s="13"></i>Tylko blokada w Grafiku</span></div>
+    <div class="acts"><span class="btn"><i data-i="x"></i>Odrzuć</span><span class="btn red"><i data-i="chk"></i>Zatwierdź</span></div></div>
+</main>
+<script src="app.js"></script>
+<script>panel({ active: 'Zatwierdzanie zmian', loc: 'Cała sieć', meta: '14°C · Czwartek, 8 października · 12:00', counts: { decyzje: 6, skrzynka: 3, ludzie: 31 } });</script>
+</body></html>

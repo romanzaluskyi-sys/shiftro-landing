@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.main { padding: 26px 32px; }
+.r1 { display: flex; align-items: center; gap: 12px; }
+.dn { display: flex; align-items: center; gap: 26px; height: 42px; border: 2px solid var(--ink); border-radius: 8px; padding: 0 14px; font-weight: 700; background: #fff; }
+.today { text-decoration: underline; font-weight: 700; }
+.r2 { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+.draft { background: var(--warnbg); border-radius: 8px; display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 16px; color: var(--warn); font-weight: 700; font-size: 14.5px; margin-bottom: 14px; }
+.draft .btn { margin-left: auto; border-color: var(--warn); color: var(--warn); background: #fff; }
+.kpis { margin-bottom: 14px; }
+.kpi { padding: 14px 16px 16px; }
+.kpi .v { font-size: 25px; margin: 6px 0 4px; }
+.gx .h { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 2px solid var(--ink); font-weight: 700; font-size: 17px; }
+.gx .h span { margin-left: auto; color: var(--muted); font-size: 14px; }
+.gx .cols { display: grid; grid-template-columns: repeat(3, 1fr); }
+.gx .c { padding: 14px 16px; display: grid; grid-template-columns: 30px 1fr; gap: 10px; }
+.gx .c + .c { border-left: 1px solid var(--soft); }
+.gx .ico { width: 30px; height: 30px; border-radius: 6px; background: var(--infobg); color: var(--info); display: grid; place-items: center; }
+.gx b { font-size: 15px; display: block; }
+.gx p { font-size: 13.5px; color: var(--muted); margin: 3px 0 10px; }
+.gx .row { gap: 6px; }
+.wk { margin-top: 14px; display: grid; grid-template-columns: 178px repeat(7, 1fr); overflow: hidden; }
+.wk > div { border-top: 1px solid var(--soft); border-left: 1px solid var(--soft); padding: 10px 8px; min-width: 0; }
+.wk > div:nth-child(8n+1) { border-left: 0; }
+.wk .dh { border-bottom: 2px solid var(--ink); font-size: 13px; }
+.dh .d { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; }
+.dh .d small { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.dh .s { margin: 6px 0 4px; } .dh .s b { font-size: 13.5px; }
+.dh .c { display: flex; justify-content: space-between; color: var(--muted); margin-bottom: 8px; }
+.dh .pill { height: 24px; font-size: 12px; padding: 0 7px; width: 100%; }
+.first { display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
+.first .btn { width: 100%; }
+.pp { display: grid; align-content: center; }
+.pp b { font-size: 16px; } .pp small { font-size: 12.5px; color: var(--muted); display: block; margin-top: 3px; }
+.cell { padding: 6px 6px !important; }
+.sh { border: 2px solid var(--ink); border-radius: 8px; padding: 6px 7px; display: flex; gap: 6px; align-items: flex-start; background: #fff; }
+.sh b { font-size: 14px; display: block; line-height: 1.2; } .sh small { font-size: 11.5px; color: var(--muted); }
+.sh.dr { border-style: dashed; border-color: var(--warn); background: #fffaf0; }
+.add { border: 2px dashed var(--soft); border-radius: 8px; height: 30px; display: grid; place-items: center; font-size: 13.5px; }
+.req { background: var(--infobg); color: var(--info); font-size: 11.5px; font-weight: 700; padding: 4px 6px; border-radius: 6px; margin-top: 5px; }
+</style></head>
+<body>
+<main class="main" id="main">
+  <div class="r1"><h1 class="t" style="margin-right:6px">Grafik</h1>
+    <div class="seg"><span class="on">Tydzień</span><span>Dzień</span><span>Miesiąc</span></div>
+    <div class="dn"><i data-i="left"></i>12–18 paź<i data-i="right"></i></div><span class="today">Dziś</span>
+    <span class="btn" style="margin-left:auto;height:42px"><i data-i="eye"></i>Podgląd</span>
+    <span class="btn red" style="height:42px"><i data-i="send"></i>Opublikuj 2</span></div>
+  <div class="r2"><span class="chip on">Wg osób</span><span class="chip">Wg stanowisk</span><span class="chip">Wg budżetu</span><span class="btn sm" style="margin-left:auto"><i data-i="copy"></i>Kopiuj poprzedni tydzień</span></div>
+  <div class="draft"><i data-i="warn"></i>Szkic: 2 zmiany — pracownicy ich jeszcze nie widzą.<span class="btn sm">Zobacz szkic</span></div>
+
+  <div class="kpis">
+    <div class="card kpi"><div class="lbl">Koszt pracy · tydzień</div><div class="v">9 840 zł</div><p>z 41 zmian</p></div>
+    <div class="card kpi"><div class="lbl">Koszt / prognoza utargu</div><div class="v">27,4%</div><p>cel 30% · prognoza 35 900 zł</p></div>
+    <div class="card kpi alert"><div class="lbl">Braki obsady</div><div class="v">1</div><p>sob: brakuje kelnera 18–23</p></div>
+    <div class="card kpi"><div class="lbl">Nadmiar · do sprawdzenia</div><div class="v">2</div><p>więcej osób niż wymaga obsada</p></div>
+  </div>
+
+  <div class="card gx">
+    <div class="h"><i data-i="swap"></i>Giełda zmian<span>3 czekają</span></div>
+    <div class="cols">
+      <div class="c"><span class="ico"><i data-i="swap"></i></span><div><b>Magda oddaje zmianę → Wiktoria</b><p>śr 14 paź · KE 16:00–23:00 · Wiktoria: po zmianie 31 h w tyg.</p><div class="row"><span class="btn red sm"><i data-i="chk"></i>Zgoda</span><span class="btn sm">Odrzuć</span></div></div></div>
+      <div class="c"><span class="ico"><i data-i="swap"></i></span><div><b>Szymon oddaje zmianę każdemu</b><p>pt 16 paź · ZM 17:00–24:00 · zgłosił się Kamil · dziś 08:12</p><div class="row"><span class="btn red sm"><i data-i="chk"></i>Zgoda</span><span class="btn sm">Odrzuć</span></div></div></div>
+      <div class="c"><span class="ico"><i data-i="swap"></i></span><div><b>Zamiana: Kuba ↔ Mateusz</b><p>sob KU 10:00–18:00 ⇄ KU 15:00–23:00 · obaj na kuchni</p><div class="row"><span class="btn red sm"><i data-i="chk"></i>Zgoda</span><span class="btn sm">Odrzuć</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="card wk">
+    <div class="dh first"><span class="lbl">Pracownik</span><span class="btn sm"><i data-i="plus"></i>Dodaj zmianę</span></div>
+    <div class="dh"><div class="d">PN<small>12 paź</small></div><div class="s"><b>6</b> os. · <b>44 h</b></div><div class="c"><span>1 210 zł</span><span>26,1%</span></div><span class="pill ok"><i data-i="chk" data-s="12"></i>obsada OK</span></div>
+    <div class="dh"><div class="d">WT<small>13 paź</small></div><div class="s"><b>6</b> os. · <b>44 h</b></div><div class="c"><span>1 210 zł</span><span>25,7%</span></div><span class="pill ok"><i data-i="chk" data-s="12"></i>obsada OK</span></div>
+    <div class="dh"><div class="d">ŚR<small>14 paź</small></div><div class="s"><b>6</b> os. · <b>45 h</b></div><div class="c"><span>1 240 zł</span><span class="warnc"><b>30,4%</b></span></div><span class="pill warn">+1 PK 11–15 ?</span></div>
+    <div class="dh"><div class="d">CZW<small>15 paź</small></div><div class="s"><b>7</b> os. · <b>50 h</b></div><div class="c"><span>1 380 zł</span><span>27,0%</span></div><span class="pill ok"><i data-i="chk" data-s="12"></i>obsada OK</span></div>
+    <div class="dh"><div class="d">PT<small>16 paź</small></div><div class="s"><b>9</b> os. · <b>66 h</b></div><div class="c"><span>1 820 zł</span><span>26,8%</span></div><span class="pill ok"><i data-i="chk" data-s="12"></i>obsada OK</span></div>
+    <div class="dh"><div class="d">SOB<small>17 paź</small></div><div class="s"><b>9</b> os. · <b>68 h</b></div><div class="c"><span>1 890 zł</span><span>24,9%</span></div><span class="pill bad">−1 KE 18–23</span></div>
+    <div class="dh"><div class="d">ND<small>18 paź</small></div><div class="s"><b>6</b> os. · <b>40 h</b></div><div class="c"><span>1 090 zł</span><span>29,5%</span></div><span class="pill warn">+1 ZM 12–16 ?</span></div>
+
+    <div class="pp"><b>Magda</b><small>Kelnerka · zlecenie</small><small>tydz. <b>28 h</b> · bez normy</small></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="cell"><div class="sh"><span class="st KE">KE</span><div><b>16:00–<br>23:00</b><small>7 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st KE">KE</span><div><b>16:00–<br>23:00</b><small>7 h</small></div></div><div class="req">⇄ oddaje → Wiktoria</div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="cell"><div class="sh"><span class="st KE">KE</span><div><b>17:00–<br>24:00</b><small>7 h</small></div></div></div>
+    <div class="cell"><div class="sh dr"><span class="st KE">KE</span><div><b>12:00–<br>19:00</b><small>szkic · 7 h</small></div></div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="pp"><b>Bartek</b><small>Barman · etat</small><small>tydz. <b>40 h</b> · norma 40 h</small></div>
+    <div class="cell"><div class="sh"><span class="st BA">BA</span><div><b>15:00–<br>23:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="cell"><div class="sh"><span class="st BA">BA</span><div><b>15:00–<br>23:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st BA">BA</span><div><b>15:00–<br>23:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st BA">BA</span><div><b>16:00–<br>24:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st BA">BA</span><div><b>16:00–<br>24:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="pp"><b>Kuba</b><small>Kucharz · etat</small><small>tydz. <b>40 h</b> · norma 40 h</small></div>
+    <div class="cell"><div class="sh"><span class="st KU">KU</span><div><b>10:00–<br>18:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st KU">KU</span><div><b>10:00–<br>18:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+    <div class="cell"><div class="sh"><span class="st KU">KU</span><div><b>10:00–<br>18:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st KU">KU</span><div><b>10:00–<br>18:00</b><small>8 h</small></div></div></div>
+    <div class="cell"><div class="sh"><span class="st KU">KU</span><div><b>10:00–<br>18:00</b><small>8 h</small></div></div><div class="req">⇄ zamiana z Mateuszem</div></div>
+    <div class="cell"><div class="add">+ dodaj</div></div>
+  </div>
+</main>
+<script src="app.js"></script>
+<script>panel({ active: 'Grafik', loc: 'Lipowa 12', meta: '14°C · Czwartek, 8 października · 17:04', counts: { decyzje: 6, skrzynka: 3, ludzie: 31 } });</script>
+</body></html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+body { padding: 20px 30px 0; }
+.m { background: #fff; border-radius: 12px 12px 0 0; border: 1px solid var(--soft); overflow: hidden; }
+.hd { background: var(--ink); color: #fff; display: flex; align-items: center; padding: 18px 24px; gap: 10px; }
+.hd b { font-size: 19px; } .hd span.t { margin-left: auto; font-size: 13.5px; color: #d6d3cb; }
+.hd b, h1, .k4 b, .al b, .sec { font-family: "Archivo", sans-serif; } .hd b, h1 { font-weight: 800; }
+.in { padding: 22px 24px; }
+.wk { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--muted); }
+h1 { font-size: 25px; margin: 8px 0 8px; }
+.lead { font-size: 15px; line-height: 1.5; }
+.k4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin: 18px 0 24px; }
+.k4 div { border: 1px solid var(--soft); border-radius: 8px; padding: 10px 12px; }
+.k4 small { font-size: 12.5px; color: var(--muted); display: block; }
+.k4 b { font-size: 21px; display: block; margin: 4px 0 2px; }
+.k4 em { font-style: normal; font-size: 11.5px; font-weight: 700; }
+.sec { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin: 0 0 10px; }
+.sec span { letter-spacing: 0; font-weight: 400; }
+.al { border-radius: 7px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; background: var(--warnbg); }
+.al b { display: block; color: var(--warn); font-size: 15px; } .al small { font-size: 13px; }
+.al a { font-weight: 700; text-decoration: underline; font-size: 13px; }
+.al.r { background: var(--badbg); } .al.r b { color: var(--red); }
+.al.g { background: var(--sunk); } .al.g b { color: var(--ink); }
+.rv { display: grid; grid-template-columns: 34px 1fr 120px; align-items: center; gap: 8px; font-size: 13.5px; margin-bottom: 7px; }
+.rv i { display: block; height: 10px; border-radius: 5px; background: var(--ok); }
+.rv i.w { background: var(--warn); }
+.rv span { text-align: right; color: var(--muted); }
+.rv span b { color: var(--ink); }
+.tb { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-bottom: 22px; }
+.tb td { padding: 9px 0; border-top: 1px solid var(--soft); }
+.tb td:not(:first-child) { text-align: right; }
+.gap { height: 22px; }
+</style></head>
+<body>
+<div class="m">
+  <div class="hd"><i data-mark="dark" data-s="24"></i><b>Shiftro</b><span class="t">Raport tygodniowy · Cała sieć</span></div>
+  <div class="in">
+    <div class="wk">TYDZIEŃ 41 · 5–11 PAŹDZIERNIKA 2026</div>
+    <h1>Dobry tydzień: utarg 4% ponad cel</h1>
+    <p class="lead">Koszt pracy w normie w 2 z 3 lokali. Najpierw zajrzyj do 3 decyzji i 3 brakujących zapisów godzin.</p>
+    <div class="k4">
+      <div><small>Utarg</small><b>81 200 zł</b><em class="okc">▲ 4% vs cel 78 100</em></div>
+      <div><small>Koszt pracy</small><b>28,6%</b><em class="okc">cel 30% · −1,4 pp</em></div>
+      <div><small>Godziny</small><b>612 h</b><em class="mut">grafik 620 h</em></div>
+      <div><small>Zmiany</small><b>71</b><em class="warnc">3 bez zapisu</em></div>
+    </div>
+
+    <div class="sec">WYMAGA UWAGI<span>4</span></div>
+    <div class="al"><div><b>3 decyzje czekają</b><small>korekta (1), wolne (1), zamiana (1)</small></div><a>Zatwierdź →</a></div>
+    <div class="al"><div><b>3 zmiany bez zapisu godzin</b><small>Szymon, zmywak (2) · Magda, kelnerka (1)</small></div><a>Uzupełnij →</a></div>
+    <div class="al r"><div><b>Sobota ponad budżet</b><small>obsada 52 h przy budżecie 48 h · Bar Przystań</small></div><a>Konfiguracja →</a></div>
+    <div class="al g"><div><b>1 spóźnienie ponad tolerancję</b><small>Mateusz, kucharz (czw, 34 min)</small></div><a>Zobacz →</a></div>
+
+    <div class="gap"></div>
+    <div class="sec">UTARG DZIEŃ PO DNIU<span>fakt / cel, zł</span></div>
+    <div id="rv"></div>
+
+    <div class="gap"></div>
+    <div class="sec">LOKALE<span>utarg · koszt pracy · godziny fakt / grafik</span></div>
+    <table class="tb">
+      <tr><td><b>Lipowa 12</b></td><td>36 400 zł</td><td class="okc"><b>27%</b></td><td>268 / 272 h</td></tr>
+      <tr><td><b>Bar Przystań</b></td><td>27 300 zł</td><td class="warnc"><b>31%</b></td><td>214 / 206 h</td></tr>
+      <tr><td><b>Bistro Rynek</b></td><td>17 500 zł</td><td class="okc"><b>28%</b></td><td>130 / 142 h</td></tr>
+    </table>
+
+    <div class="sec">GRAFIK I ZMIANY</div>
+    <table class="tb">
+      <tr><td>Grafik na 12–18 paź opublikowany</td><td><b>czw 8 paź</b></td></tr>
+      <tr><td>Zamiany zmian</td><td><b>3 · 2 zatwierdzone</b></td></tr>
+      <tr><td>Giełda — wzięte zmiany</td><td><b>2 z 2</b></td></tr>
+      <tr><td>Zmiany w opublikowanym grafiku</td><td><b>4</b></td></tr>
+    </table>
+
+    <div class="sec">LUDZIE</div>
+    <table class="tb">
+      <tr><td>Najwięcej godzin: Bartek, barman</td><td><b>52,5 h</b></td></tr>
+      <tr><td>Ponad normą (etat): Kuba, kucharz</td><td class="warnc"><b>+6 h w paź</b></td></tr>
+      <tr><td>Nowa osoba na próbę: Kamil, zmywak</td><td class="warnc"><b>czeka na decyzję</b></td></tr>
+    </table>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+var R = [['Pn', 9800, 10000], ['Wt', 10100, 10000], ['Śr', 10400, 10500], ['Cz', 11300, 11000], ['Pt', 13900, 13000], ['Sb', 15600, 14500], ['Nd', 10100, 9100]];
+var f = function (n) { return String(n).replace(/\B(?=(\d{3})+$)/g, ' '); };
+document.getElementById('rv').innerHTML = R.map(function (r) {
+  return '<div class="rv"><b>' + r[0] + '</b><div><i class="' + (r[1] < r[2] ? 'w' : '') + '" style="width:' + (r[1] / 16000 * 100) + '%"></i></div><span><b>' + f(r[1]) + '</b> / ' + f(r[2]) + '</span></div>';
+}).join('');
+</script>
+</body></html>
