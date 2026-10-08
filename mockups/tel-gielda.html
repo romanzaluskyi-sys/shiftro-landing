@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pl" class="device"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.bell { margin-left: auto; width: 48px; height: 48px; border: 2px solid var(--ink); border-radius: 9px; display: grid; place-items: center; position: relative; }
+.bell i { position: absolute; top: -8px; right: -8px; background: var(--red); color: #fff; font-style: normal; font-size: 12px; font-weight: 700; border-radius: 10px; min-width: 20px; height: 20px; display: grid; place-items: center; }
+.day { font-size: 17px; font-weight: 700; padding: 2px 2px 0; }
+.sh { display: flex; align-items: center; gap: 8px; }
+.sh b.h { font-size: 21px; }
+.sh .len { margin-left: auto; color: var(--muted); font-weight: 700; font-size: 15px; }
+.gb { height: 38px; padding: 0 12px; border: 2px solid var(--soft); border-radius: 19px; display: flex; align-items: center; gap: 6px; font-size: 15px; }
+.where { color: var(--muted); font-size: 15px; margin: 8px 0; }
+.with { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.with .lbl { font-size: 12.5px; }
+.who { background: var(--sunk); border-radius: 16px; padding: 4px 10px 4px 4px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.who .av { width: 26px; height: 26px; font-size: 10.5px; background: #fff; }
+.who small { color: var(--muted); font-weight: 700; font-size: 11.5px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--soft); }
+.steps span { border-top: 4px solid var(--soft); text-align: center; font-size: 12.5px; font-weight: 700; padding-top: 8px; }
+.steps .d { border-color: var(--ink); } .steps .on { border-color: var(--red); }
+.wr { display: flex; align-items: center; gap: 6px; font-size: 15px; margin: 12px 0 14px; }
+.q { font-size: 14px; font-weight: 700; letter-spacing: .07em; color: var(--muted); }
+.qs { font-size: 13.5px; color: var(--muted); margin: 6px 0 10px; }
+.pp { border: 2px solid var(--soft); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.pp .av { width: 40px; height: 40px; font-size: 14px; }
+.pp b { font-size: 18px; display: block; }
+.pp small { font-size: 14px; color: var(--muted); }
+.pp svg { margin-left: auto; }
+</style></head>
+<body>
+<div class="phone"><div class="dev"><div class="scr">
+  <div class="sbar"><span>09:14</span><i>●●● ▮</i></div>
+  <div class="phead"><span class="back"><i data-i="left"></i>Zmień</span><div class="nm"><small>Grafik</small><b>Magda</b></div><span class="bell"><i data-i="bell"></i><i>1</i></span></div>
+  <div class="pbody">
+    <div class="day">Śr 14 paź</div>
+    <div class="pc">
+      <div class="sh"><span class="st KE">KE</span><b class="h">16:00–23:00</b><span class="len">7 h</span><span class="gb"><i data-i="swap"></i>Giełda</span></div>
+      <div class="where">Kelnerka · Bar Przystań</div>
+      <div class="with"><span class="lbl">Z TOBĄ</span><span class="who"><span class="av">JU</span><b>Julia</b><small>HO</small></span><span class="who"><span class="av">BA</span><b>Bartek</b><small>BA</small></span></div>
+      <div class="steps"><span class="d">Sposób</span><span class="on">Komu</span><span>Wyślij</span></div>
+      <div class="wr"><i data-i="left"></i>Wróć</div>
+      <div class="q">KOMU ODDAJESZ?</div>
+      <div class="qs">Osoby wolne w śr i umiejące KE</div>
+      <div class="pp"><span class="av">Wi</span><div><b>Wiktoria</b><small>KE · wolna tego dnia</small></div><i data-i="right"></i></div>
+      <div class="pp"><span class="av">Ok</span><div><b>Oksana</b><small>KE, HO · wolna tego dnia</small></div><i data-i="right"></i></div>
+      <div class="pp"><span class="av">To</span><div><b>Tomek</b><small>KE, BA · wolny tego dnia</small></div><i data-i="right"></i></div>
+      <div class="pp"><span class="av">Zu</span><div><b>Zuzia</b><small>KE, PK · wolna tego dnia</small></div><i data-i="right"></i></div>
+      <div class="pp"><span class="av">Ha</span><div><b>Hania</b><small>KE · wolna tego dnia</small></div><i data-i="right"></i></div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div></div></div>
+<script src="app.js"></script>
+<script>tabs('Grafik', { Grafik: 1 });</script>
+</body></html>

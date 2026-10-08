@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pl" class="device"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.status { margin-left: auto; background: var(--okbg); color: var(--ok); font-weight: 700; font-size: 14px; border-radius: 16px; height: 32px; padding: 0 12px; display: flex; align-items: center; gap: 6px; }
+.status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
+.cut { margin-top: -26px; padding-top: 30px; }
+.with { display: flex; align-items: center; gap: 6px; font-size: 14.5px; white-space: nowrap; }
+.with .av { width: 30px; height: 30px; font-size: 11.5px; margin-left: -10px; border: 2px solid #fff; }
+.with .av:first-of-type { margin-left: 4px; }
+.rep { display: flex; align-items: center; gap: 12px; }
+.rep .fl { width: 40px; height: 40px; border-radius: 50%; background: var(--sunk); display: grid; place-items: center; }
+.rep small { display: block; color: var(--muted); font-size: 13.5px; }
+.rep b { font-size: 16px; }
+.rep .pill { height: 22px; font-size: 12px; margin-left: 4px; }
+.hdr { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 4px 0; }
+.hdr b { font-size: 19px; }
+.tk { display: flex; align-items: center; gap: 10px; }
+.tk .w { flex: 1; }
+.tk small { display: block; color: var(--muted); font-size: 13px; font-weight: 700; }
+.tk b.n { font-size: 17px; }
+.tk .c { font-size: 18px; font-weight: 700; }
+.tk h4 { font-size: 17px; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+.dot { width: 18px; height: 18px; border-radius: 50%; background: var(--red); color: #fff; font-size: 12px; display: grid; place-items: center; }
+.now { display: inline-block; background: var(--red); color: #fff; font-size: 11.5px; padding: 3px 6px; border-radius: 4px; margin-right: 4px; }
+.bar { height: 8px; background: var(--sunk); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 50%; background: var(--ok); }
+.mon { background: var(--sunk); border-radius: 10px; padding: 14px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.mon b { margin-left: auto; font-size: 17px; }
+.end { background: var(--red); color: #fff; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; }
+.end b { font-size: 21px; display: block; } .end small { font-size: 13px; opacity: .9; }
+.end svg { margin-left: auto; width: 22px; height: 22px; }
+</style></head>
+<body>
+<div class="phone"><div class="dev"><div class="scr">
+  <div class="sbar"><span>17:40</span><i>●●● ▮</i></div>
+  <div class="phead"><span class="back"><i data-i="left"></i>Zmień</span><div class="nm"><small>Oksana ·</small><b>Pulpit</b></div><span class="status">na zmianie</span></div>
+  <div class="pbody">
+    <div class="pc cut"><div class="with"><span class="mut">Dziś z Tobą:</span><span class="av">Ju</span><span class="av">Ba</span><span class="av">Zu</span><b style="margin-left:4px">Julia, Bartek, Zuzia</b></div></div>
+    <div class="pc soft rep"><span class="fl"><i data-i="flag"></i></span><div><small>Twoje zgłoszenia</small><b>Korekta 2 paź</b><span class="pill ok">zatwierdzona</span></div><i data-i="right" style="margin-left:auto"></i></div>
+    <div class="hdr"><span class="lbl">Zadania dziś</span><b>7 z 14</b></div>
+    <div class="pc tk"><div class="w"><small>Przed otwarciem · do 12:00</small><h4>Przygotowanie sali</h4></div><span class="c">5/5</span><i data-i="right"></i></div>
+    <div class="pc"><div class="tk"><div class="w"><small><span class="now">TERAZ</span>Popołudniowe</small><h4 style="font-size:19px">Stacja kelnerska i taras</h4></div><span class="c">2/4</span><i data-i="right"></i></div><div class="bar"><i></i></div></div>
+    <div class="pc tk"><div class="w"><small>Wieczorne · do 23:00</small><h4>Zamknięcie sali <span class="dot">!</span></h4></div><span class="c">0/5</span><i data-i="right"></i></div>
+    <div class="mon"><i data-i="file"></i>Październik<b>46,5 h</b><i data-i="right"></i></div>
+    <div class="end"><div><b>Zakończ zmianę</b><small>przejdziesz do Zmiany</small></div><i data-i="right"></i></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div></div></div>
+<script src="app.js"></script>
+<script>tabs('Pulpit', { Zadania: 7 });</script>
+</body></html>

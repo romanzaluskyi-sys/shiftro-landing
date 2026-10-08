@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pl" class="device"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.hd { background: #fff; border-bottom: 2px solid var(--ink); display: flex; align-items: center; gap: 10px; padding: 16px 26px; }
+.hd b.l { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 21px; }
+.hd .clk b, .t b, .new b, .sec { font-family: "Archivo", sans-serif; }
+.hd .where { font-weight: 700; color: var(--muted); font-size: 15px; margin-left: 4px; }
+.hd .clk { margin-left: auto; text-align: right; }
+.hd .clk b { font-size: 25px; display: block; line-height: 1; }
+.hd .clk small { font-size: 12.5px; color: var(--muted); display: inline-flex; gap: 4px; align-items: center; margin-top: 4px; }
+.in { padding: 18px 26px; }
+.ttl { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.ttl h1 { font-weight: 800; font-size: 31px; margin-right: 10px; letter-spacing: -.01em; }
+.ttl .pill { height: 30px; border-radius: 15px; padding: 0 12px; font-size: 14px; }
+.pill.redsoft { background: var(--badbg); color: var(--red); }
+.pill.redsoft::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+.sec { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin: 4px 0 8px; }
+.sec i { font-style: normal; background: var(--sunk); color: var(--ink); border-radius: 11px; min-width: 22px; height: 22px; display: grid; place-items: center; font-size: 12.5px; letter-spacing: 0; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.p { background: #fff; border: 2px solid var(--ink); border-radius: 10px; height: 92px; padding: 0 14px 0 16px; display: flex; align-items: center; gap: 10px; }
+.p.on { border-color: var(--red); } .p.wait { border-color: var(--ok); }
+.p .w { flex: 1; min-width: 0; }
+.p .w b { font-family: "Archivo", sans-serif; font-size: 23px; display: flex; align-items: center; gap: 6px; }
+.p .w > span { display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--muted); margin-top: 2px; }
+.p .msg { color: var(--red); font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+.p .msg svg { width: 14px; height: 14px; }
+.p .probe { display: inline-block; background: var(--warnbg); color: var(--warn); font-weight: 700; font-size: 13px; padding: 4px 8px; border-radius: 5px; margin-top: 5px; }
+.t { border-radius: 8px; text-align: center; padding: 7px 12px 6px; min-width: 84px; }
+.t small { display: block; font-size: 12px; font-weight: 700; }
+.t b { font-size: 21px; }
+.t.r { background: var(--red); color: #fff; } .t.g { background: var(--ok); color: #fff; } .t.s { background: var(--sunk); color: var(--muted); }
+.new { border: 2px dashed var(--ink); border-radius: 10px; height: 70px; display: flex; align-items: center; justify-content: center; gap: 14px; width: calc((100% - 20px) / 3 * 1.5); }
+.new b { font-size: 17px; display: block; } .new small { font-size: 13px; color: var(--muted); }
+</style></head>
+<body>
+<div class="tablet"><div class="dev"><div class="scr">
+  <div class="hd"><i data-mark="light" data-s="32"></i><b class="l">Shiftro</b><span class="where">Lipowa 12</span>
+    <div class="clk"><b>14:40</b><small><i data-i="cloud" data-s="13"></i>17°C · czw 8 paź</small></div></div>
+  <div class="in">
+    <div class="ttl"><h1>Wybierz siebie</h1><span class="pill redsoft">3 na zmianie</span><span class="pill ok">3 czeka na start</span><span class="pill grey">2 zakończyło</span></div>
+
+    <div class="sec">NA ZMIANIE <i>3</i></div>
+    <div class="grid">
+      <div class="p on"><div class="w"><b>Kuba</b><span><span class="st KU">KU</span>Kucharz</span><div class="msg"><i data-i="mail"></i>Czekają 2 wiadomości</div></div><div class="t r"><small>zmiana od</small><b>10:00</b></div></div>
+      <div class="p on"><div class="w"><b>Julia</b><span><span class="st HO">HO</span>Hostessa</span></div><div class="t r"><small>zmiana od</small><b>12:00</b></div></div>
+      <div class="p on"><div class="w"><b>Bartek</b><span><span class="st BA">BA</span>Barman</span></div><div class="t r"><small>zmiana od</small><b>13:00</b></div></div>
+    </div>
+
+    <div class="sec">DZIŚ W GRAFIKU <i>3</i></div>
+    <div class="grid">
+      <div class="p wait"><div class="w"><b>Oksana <i data-i="lock" data-s="17"></i></b><span><span class="st KE">KE</span>Kelnerka</span></div><div class="t g"><small>w grafiku</small><b>15:00</b></div></div>
+      <div class="p wait"><div class="w"><b>Zuzia <i data-i="lock" data-s="17"></i></b><span><span class="st PK">PK</span>Pomoc kuchenna</span></div><div class="t g"><small>w grafiku</small><b>15:00</b></div></div>
+      <div class="p wait"><div class="w"><b>Szymon</b><span><span class="st ZM">ZM</span>Zmywak</span><div class="msg"><i data-i="mail"></i>1 wiadomość</div></div><div class="t g"><small>w grafiku</small><b>17:00</b></div></div>
+    </div>
+
+    <div class="sec">POZOSTALI <i>4</i></div>
+    <div class="grid">
+      <div class="p"><div class="w"><b>Magda <i data-i="lock" data-s="17"></i></b><span><span class="st KE">KE</span>Kelnerka</span></div><div class="t s"><small>dziś</small><b>6,0 h</b></div></div>
+      <div class="p"><div class="w"><b>Kamil</b><span><span class="st ZM">ZM</span>Zmywak</span><div class="probe">na próbę</div></div><div class="t s"><small>dziś</small><b>5,5 h</b></div></div>
+      <div class="p"><div class="w"><b>Mateusz</b><span><span class="st KU">KU</span>Kucharz</span></div></div>
+      <div class="p"><div class="w"><b>Wiktoria <i data-i="lock" data-s="17"></i></b><span><span class="st KE">KE</span>Kelnerka</span></div></div>
+    </div>
+
+    <div class="new"><i data-i="userplus" data-s="26"></i><div><b>Nowa osoba na próbę</b><small>tylko zapis godzin · kierownik zatwierdzi</small></div></div>
+  </div>
+</div></div></div>
+<script src="app.js"></script>
+</body></html>

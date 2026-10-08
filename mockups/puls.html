@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+.r1 { display: flex; align-items: center; gap: 8px; }
+.r1 h1 { margin-right: 10px; }
+.lock { margin-left: auto; background: var(--sunk); border-radius: 15px; padding: 6px 14px; font-size: 13.5px; font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.r2 { display: flex; align-items: center; gap: 14px; margin: 16px 0; color: var(--muted); }
+.dn { display: flex; align-items: center; justify-content: space-between; width: 226px; height: 42px; border: 2px solid var(--ink); border-radius: 8px; padding: 0 14px; font-weight: 700; background: #fff; color: var(--ink); }
+.kpis { margin-bottom: 14px; }
+.kpi .v { font-size: 27px; }
+.kpi p b { color: var(--ink); }
+.kpi.dark p b { color: #fff; }
+.ch .h { display: flex; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--ink); font-weight: 700; font-size: 17px; }
+.ch .lg { margin-left: auto; display: flex; gap: 16px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.ch .lg span { display: flex; gap: 6px; align-items: center; }
+.ch .lg i { width: 14px; height: 10px; background: var(--ink); display: inline-block; }
+.ch .lg i.f { height: 0; border-top: 2px solid var(--ink); }
+.ch .lg i.r { background: var(--red); }
+.bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; padding: 22px 18px 14px; }
+.d { display: grid; grid-template-rows: 180px auto; }
+.plot { position: relative; border-bottom: 2px solid var(--ink); margin: 0 4px; display: flex; align-items: flex-end; justify-content: center; gap: 6px; }
+.plot .u { width: 56px; background: var(--ink); position: relative; }
+.plot .u small { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.plot .k { width: 36px; background: var(--red); }
+.plot .p { position: absolute; left: 4px; right: 4px; border-top: 2px dashed #444; }
+.d.off .plot { border-color: var(--soft); } .d.off .p { border-color: #aaa; }
+.d .lab { text-align: center; padding-top: 8px; font-size: 14px; }
+.d .lab b { display: block; } .d .lab span { display: block; margin-top: 8px; font-size: 13.5px; }
+.d .lab em { font-style: normal; display: inline-block; margin-top: 8px; background: var(--sunk); font-size: 11.5px; font-weight: 700; padding: 3px 6px; border-radius: 4px; }
+.d.off .lab { color: #9b978e; }
+.low { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; margin-top: 14px; }
+.low .h { display: flex; gap: 8px; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--ink); font-weight: 700; font-size: 17px; }
+.low .h span { margin-left: auto; color: var(--muted); font-size: 14px; }
+.at { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; padding: 14px 18px; align-items: start; }
+.at + .at { border-top: 1px solid var(--soft); }
+.at .ic { width: 34px; height: 34px; border-radius: 6px; background: var(--warnbg); color: var(--warn); display: grid; place-items: center; }
+.at .ic.g { background: var(--sunk); color: var(--ink); }
+.at b { display: block; font-size: 15px; } .at p { font-size: 13.5px; color: var(--muted); margin-top: 3px; }
+.dz { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 14px 18px; }
+.dz span { border-radius: 6px; text-align: center; padding: 8px 0; font-size: 12.5px; font-weight: 700; background: var(--okbg); color: var(--ok); line-height: 1.6; }
+.dz span.w { background: var(--warnbg); color: var(--warn); } .dz span.g { background: var(--sunk); color: var(--ink); } .dz span.e { background: #fff; border: 2px dashed var(--soft); color: var(--muted); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px 16px; }
+.tiles div { background: var(--bg); border-radius: 8px; padding: 12px; }
+.tiles b { font-size: 25px; } .tiles b small { font-size: 14px; color: var(--muted); } .tiles p { font-size: 13px; color: var(--muted); }
+</style></head>
+<body>
+<main class="main" id="main">
+  <div class="r1"><h1 class="t">Puls</h1><span class="chip">Karta dnia</span><span class="chip">Dni</span><span class="chip on">Analityka</span><span class="chip">Konfiguracja</span><span class="lock"><i data-i="lock" data-s="14"></i>Finanse i historia — tylko kierownik</span></div>
+  <div class="r2"><span class="dn"><i data-i="left"></i>5–11 paź<i data-i="right"></i></span>5 dni zamkniętych · porównanie z 28 wrz – 4 paź</div>
+  <div class="kpis">
+    <div class="card kpi dark"><div class="lbl">Utarg · pn–pt</div><div class="v">24 380 zł</div><p>prognoza 23 000 zł · <b>+6,0%</b></p><p>poprzedni tydz. 23 110 zł · ▲ 5,5%</p></div>
+    <div class="card kpi"><div class="lbl">Koszt pracy · % utargu</div><div class="v">27,1%</div><p>6 610 zł · cel 30% · zapas 704 zł</p></div>
+    <div class="card kpi"><div class="lbl">Godziny</div><div class="v">214,5<small>h</small></div><p>plan 220 h · <b>−5,5 h</b></p></div>
+    <div class="card kpi"><div class="lbl">Średni paragon</div><div class="v">46,17<small>zł</small></div><p>528 paragonów · ▲ 1,40 zł</p></div>
+  </div>
+
+  <div class="card ch">
+    <div class="h">Dzień po dniu<div class="lg"><span><i></i>utarg</span><span><i class="f"></i>prognoza</span><span><i class="r"></i>koszt pracy</span></div></div>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <div class="low">
+    <div class="card"><div class="h">Na co zwrócić uwagę<span>3</span></div>
+      <div class="at"><span class="ic"><i data-i="thermo"></i></span><div><b>Zmywarka tunelowa — 2 przestoje w tygodniu</b><p>śr i pt, razem 1 h 40 min · Szymon zostawił notatkę w zamknięciu dnia. Zadanie „serwis” otwarte od środy.</p></div><span class="btn sm">Zadania →</span></div>
+      <div class="at"><span class="ic g"><i data-i="tag"></i></span><div><b>Piątek +12% vs prognoza — tag: koncert w parku</b><p>Przy takim tagu utarg był średnio wyższy o 10%. Warto dodać kelnera.</p></div><span class="btn sm">Grafik →</span></div>
+    </div>
+    <div class="card"><div class="h"><i data-i="lock" data-s="17"></i>Dyscyplina zamykania</div>
+      <div class="dz"><span>Pn<br>22:41</span><span>Wt<br>22:36</span><span>Śr<br>22:58</span><span>Cz<br>22:44</span><span class="w">Pt<br>23:52</span><span class="g">Sb<br>otwarty</span><span class="e">Nd<br>—</span></div>
+      <div class="tiles"><div><b>1:14</b><p>średni czas wypełnienia (cel 60–90 s)</p></div><div><b>47<small>/50</small></b><p>wpisów dnia w tygodniu</p></div></div>
+    </div>
+  </div>
+</main>
+<script src="app.js"></script>
+<script>
+panel({ active: 'Puls', loc: 'Lipowa 12', meta: '12°C · Sobota, 10 października · 22:47', counts: { decyzje: 4, skrzynka: 2, ludzie: 31 } });
+// utarg, prognoza, koszt pracy (zł), etykieta
+var D = [['Pn 5', 4180, 4100, 1208, ''], ['Wt 6', 4390, 4300, 1212, 'catering'], ['Śr 7', 4620, 4500, 1423, ''], ['Cz 8', 5010, 4600, 1323, ''], ['Pt 9', 6180, 5500, 1444, 'koncert'], ['Sb 10', 0, 6400, 1500, 'dziś'], ['Nd 11', 0, 4800, 0, '—']];
+var MAX = 7000, H = 180;
+document.getElementById('bars').innerHTML = D.map(function (d) {
+  var off = !d[1];
+  var pct = d[1] ? (d[3] / d[1] * 100).toFixed(1).replace('.', ',') + '%' : '';
+  var hot = d[1] && d[3] / d[1] > 0.3;
+  return '<div class="d' + (off ? ' off' : '') + '"><div class="plot">' +
+    '<span class="p" style="bottom:' + (d[2] / MAX * H) + 'px"></span>' +
+    (d[1] ? '<span class="u" style="height:' + (d[1] / MAX * H) + 'px"><small>' + (d[1] / 1000).toFixed(1).replace('.', ',') + ' tys.</small></span>' : '') +
+    (d[3] ? '<span class="k" style="height:' + (d[3] / MAX * H) + 'px;' + (off ? 'opacity:.45' : '') + '"></span>' : '') +
+    '</div><div class="lab"><b>' + d[0] + '</b><span' + (hot ? ' class="red" style="font-weight:700"' : '') + '>' + (pct || (d[4] === 'dziś' ? 'dziś' : '—')) + '</span>' +
+    (d[4] && d[1] ? '<em>' + d[4] + '</em>' : '') + '</div></div>';
+}).join('');
+</script>
+</body></html>
