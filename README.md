@@ -8,12 +8,17 @@ Dwie strony bez kroku budowania i bez zależności: `index.html` (landing) i
 
 i `http://localhost:8899`.
 
-## Zanim trafi na produkcję: podłącz formularz
+## Zgłoszenia, demo i prezentacja
 
-W `ankieta.html`, w bloku `<script>` na dole, jest miejsce oznaczone
-`// Tutaj podłącz wysyłkę do swojego backendu`. Dziś formularz tylko sprawdza
-pola i pokazuje ekran podziękowania — **nic nie wysyła**. Najprościej:
-Formspree (`fetch` POST z `FormData` na `https://formspree.io/f/XXXXXXXX`).
+`ankieta.html` wysyła zgłoszenie do Google Apps Script (`formularz/`): wiersz
+w Arkuszu Google, powiadomienie do nas i list do klienta z linkiem do demo
+(`demo.shiftro.pl`) i prezentacji (`prezentacja.html`). Instalacja i adres do
+wklejenia w `ENDPOINT`: [`formularz/README.md`](formularz/README.md). Dopóki
+`ENDPOINT` jest pusty, ankieta pokazuje błąd zamiast udawać, że wysłała.
+
+Ekran podziękowania prowadzi od razu do demo i prezentacji; scenariusz
+rozmowy, która następuje potem: [`sprzedaz/rozmowa.md`](sprzedaz/rozmowa.md).
+`formularz/` i `sprzedaz/` nie trafiają na stronę (`.vercelignore`).
 
 ## Ekrany na stronie są zmyślone
 

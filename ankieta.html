@@ -56,13 +56,26 @@ input::placeholder, textarea::placeholder { color: #8f8b82; font-weight: 500; }
 .err { color: var(--accent); font-weight: 600; font-size: 15px; }
 .opt { color: var(--muted); font-size: 14px; }
 .done { padding-block: 72px 96px; display: grid; gap: 22px; }
+.done .lead { margin: 0; max-width: 60ch; font-size: 18px; color: var(--muted); }
+.next { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+.next a { display: grid; gap: 8px; align-content: start; padding: 22px; border-radius: var(--r); border: 2px solid var(--ink); background: var(--surface); color: var(--ink); text-decoration: none; }
+.next a.main { background: var(--ink); color: #fff; }
+.next a b { font: 800 22px var(--d); letter-spacing: -.015em; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.next a span { font-size: 15px; opacity: .8; }
+.next a:hover b svg { transform: translateX(3px); }
+.next svg { transition: transform .15s; flex: none; }
+.plan-h { font: 800 22px var(--d); letter-spacing: -.015em; margin: 18px 0 0; }
+.done li a { color: var(--accent); font-weight: 600; }
+.btn:disabled { opacity: .6; cursor: progress; }
+.kalk { margin: 22px 0 0; padding: 14px 18px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; font-size: 15px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .done .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--ok-bg); color: var(--ok); display: grid; place-items: center; }
 .done ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
 .done li { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 16px 18px; }
 .done li + li { border-top: 1px solid var(--soft); }
-.done li b { color: var(--accent); }
+.done li > b { color: var(--accent); }
 footer .wrap { max-width: 1200px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-block: 28px; border-top: 1px solid var(--soft); font-size: 14px; color: var(--muted); }
-@media (max-width: 640px) { .grid, .mode { grid-template-columns: 1fr; } .done li { grid-template-columns: 1fr; gap: 2px; } }
+@media (max-width: 640px) { .grid, .mode, .next { grid-template-columns: 1fr; } .done li { grid-template-columns: 1fr; gap: 2px; } }
 </style>
 </head>
 <body>
@@ -73,10 +86,11 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
     <section class="intro wrap">
       <p class="eyebrow">Zgłoszenie · 2 minuty</p>
       <h1>Powiedz nam o swoim lokalu</h1>
-      <p class="lead">Na tej podstawie zdecydujemy razem, czy Shiftro pasuje do tego, jak pracujecie. Odpiszemy w ciągu dwóch dni roboczych, także wtedy, gdy uznamy, że nie pasuje.</p>
+      <p class="lead">Zaraz po wysłaniu dostaniesz link do demo i krótką prezentację. W ciągu dwóch dni roboczych zadzwonimy i razem zdecydujemy, czy Shiftro pasuje do tego, jak pracujecie. Powiemy też wprost, jeśli nie pasuje.</p>
+      <p class="kalk" id="kalk" hidden></p>
       <div class="mode" role="radiogroup" aria-label="Czego szukasz">
         <label class="card"><input type="radio" name="mode" id="m-test" value="test" checked><span><b>Bezpłatny test w lokalu</b><span>Wdrażamy Shiftro u Was na kilka tygodni</span></span></label>
-        <label class="card"><input type="radio" name="mode" id="m-demo" value="demo"><span><b>Najpierw demo</b><span>Dostęp do wersji demo z przykładowym lokalem</span></span></label>
+        <label class="card"><input type="radio" name="mode" id="m-demo" value="demo"><span><b>Najpierw demo</b><span>Link do demo z przykładowym lokalem od razu po wysłaniu</span></span></label>
       </div>
     </section>
 
@@ -110,12 +124,14 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
           <label class="f"><span>Imię i nazwisko</span><input type="text" id="f-person" name="osoba" autocomplete="name" required></label>
           <label class="f"><span>Telefon</span><input type="tel" id="f-tel" name="telefon" autocomplete="tel" placeholder="+48 600 000 000" required></label>
         </div>
-        <label class="f"><span>E-mail <small>· opcjonalnie</small></span><input type="email" id="f-mail" name="email" autocomplete="email" placeholder="imie@lokal.pl"></label>
+        <label class="f"><span>E-mail <small>· wyślemy na niego link do demo i prezentację</small></span><input type="email" id="f-mail" name="email" autocomplete="email" placeholder="imie@lokal.pl" required></label>
+        <input type="hidden" name="kalkulator" id="f-kalk">
+        <label class="hp" aria-hidden="true">Firma<input type="text" name="firma" tabindex="-1" autocomplete="off"></label>
         <div class="f"><span class="q">Twoja rola</span><div class="chips"><label><input type="radio" name="rola" id="r1" value="wlasciciel"><span>Właściciel</span></label><label><input type="radio" name="rola" id="r2" value="kierownik"><span>Kierownik</span></label><label><input type="radio" name="rola" id="r3" value="pracownik"><span>Pracownik</span></label></div><span class="opt" id="emp" hidden>Skontaktujemy się z Tobą i poprosimy o zgodę pracodawcy, zanim cokolwiek uruchomimy.</span></div>
         <label class="consent"><input type="checkbox" id="f-ok" required><span>Zgadzam się na kontakt i przetwarzanie podanych danych w celu obsługi zgłoszenia do Shiftro. Dane nie są przekazywane dalej i mogę wycofać zgodę w każdej chwili.</span></label>
       </fieldset>
 
-      <div class="send"><button class="btn" type="submit" id="go">Wyślij zgłoszenie</button><p>Odpowiadamy w ciągu dwóch dni roboczych.</p></div>
+      <div class="send"><button class="btn" type="submit" id="go">Wyślij zgłoszenie</button><p>Link do demo dostaniesz od razu.</p></div>
       <p class="err" id="err" aria-live="polite" hidden></p>
     </form>
   </div>
@@ -123,11 +139,17 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
   <section class="done wrap" id="doneview" hidden>
     <span class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5 9-10"/></svg></span>
     <p class="eyebrow">Zgłoszenie wysłane</p>
-    <h1 id="done-h">Dziękujemy. Odezwiemy się w ciągu dwóch dni roboczych</h1>
+    <h1 id="done-h">Dziękujemy. Shiftro możesz zobaczyć już teraz</h1>
+    <p class="lead" id="done-mail">Wysłaliśmy Ci list z linkiem do demo i prezentacją. Jeśli nie dotrze w kilka minut, zajrzyj do spamu albo zakładki Oferty.</p>
+    <div class="next">
+      <a class="main" href="https://demo.shiftro.pl" target="_blank" rel="noopener"><b>Wejdź do demo <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b><span>Prawdziwa aplikacja na przykładowej sieci lokali. Wybierz rolę: kierownik, tablet w lokalu albo telefon pracownika. Bez zakładania konta.</span></a>
+      <a href="prezentacja.html" target="_blank"><b>Otwórz prezentację <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b><span>Pięć minut: co robi Shiftro, jak wygląda wdrożenie w jeden dzień i ile kosztuje.</span></a>
+    </div>
+    <h2 class="plan-h">Co dalej</h2>
     <ol>
-      <li><b>1 · telefon</b><span>Zadzwonimy na podany numer i umówimy 20 minut rozmowy.</span></li>
-      <li><b>2 · demo</b><span id="done-2">Pokażemy Shiftro na Waszych stanowiskach i powiemy wprost, czy pasuje.</span></li>
-      <li><b>3 · start</b><span>Jeśli tak, przenosimy dane z arkusza i ustawiamy tablet w lokalu w jeden dzień.</span></li>
+      <li><b>1 · teraz</b><span>Demo i prezentacja, kiedy Ci wygodnie. Nic nie instalujesz.</span></li>
+      <li><b>2 · do 2 dni</b><span id="done-2">Zadzwonimy na podany numer. 20 minut: zapytamy, jak dziś układacie grafik, pokażemy Shiftro na Waszych stanowiskach i powiemy wprost, czy pasuje.</span></li>
+      <li><b>3 · test</b><span id="done-3">Jeśli pasuje: wdrożenie w jeden dzień, kilka tygodni testu za 0 zł, bez umowy na rok.</span></li>
     </ol>
     <a class="btn ghost" href="index.html" style="justify-self:start">Wróć na stronę</a>
   </section>
@@ -137,21 +159,64 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
 
 <script>
 (function () {
+  // Adres wdrożenia Google Apps Script (…/exec). Instalacja: formularz/README.md.
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyQPsDW92jR2vL_xlN043t5zGj7I461iAclYQujvBSI-nQwPIL3EPV9BeNfheZJfRD72w/exec';
+  // Opcjonalnie: link do kalendarza rezerwacji. Puste = bez przycisku „Umów termin”.
+  var KALENDARZ = '';
+
   var $ = function (id) { return document.getElementById(id); };
+  var esc = function (v) { return String(v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   if (location.hash === '#demo') $('m-demo').checked = true;
+
+  // Z kalkulatora na stronie (index.html#kalkulator): zaznaczone odpowiedzi i wynik do arkusza.
+  var q = new URLSearchParams(location.search);
+  ['lokale', 'ludzie', 'dzis'].forEach(function (n) {
+    var v = q.get(n);
+    document.querySelectorAll('input[name="' + n + '"]').forEach(function (r) { if (r.value === v) r.checked = true; });
+  });
+  if (q.get('kalk')) {
+    $('f-kalk').value = q.get('kalk').slice(0, 300);
+    var m = q.get('kalk').match(/^[^:]+: (\+[^/]+)\/mies\./);
+    if (m) { $('kalk').hidden = false; $('kalk').textContent = 'Z kalkulatora wyszło około ' + m[1] + ' miesięcznie na plus. Na rozmowie sprawdzimy to na Waszych liczbach.'; }
+  }
   document.querySelectorAll('input[name=rola]').forEach(function (r) { r.addEventListener('change', function () { $('emp').hidden = !$('r3').checked; }); });
+
+  function blad(t) { $('err').hidden = false; $('err').textContent = t; }
+
   $('form').addEventListener('submit', function (e) {
     e.preventDefault();
     var miss = [];
-    [['f-name', 'nazwę lokalu'], ['f-city', 'miasto'], ['f-person', 'imię i nazwisko'], ['f-tel', 'telefon']].forEach(function (x) { if (!$(x[0]).value.trim()) miss.push(x[1]); });
+    [['f-name', 'nazwę lokalu'], ['f-city', 'miasto'], ['f-person', 'imię i nazwisko'], ['f-tel', 'telefon'], ['f-mail', 'e-mail']].forEach(function (x) { if (!$(x[0]).value.trim()) miss.push(x[1]); });
     if (!$('f-ok').checked) miss.push('zgodę na kontakt');
-    if (miss.length) { $('err').hidden = false; $('err').textContent = 'Uzupełnij jeszcze: ' + miss.join(', ') + '.'; return; }
-    // Tutaj podłącz wysyłkę do swojego backendu (np. fetch POST z FormData).
+    if (miss.length) return blad('Uzupełnij jeszcze: ' + miss.join(', ') + '.');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('f-mail').value.trim())) return blad('Sprawdź adres e-mail — wyślemy na niego link do demo.');
+    if (!ENDPOINT) return blad('Formularz nie jest jeszcze podłączony. Spróbuj później.');
+
     var demo = $('m-demo').checked;
-    $('done-h').textContent = demo ? 'Dziękujemy. Dostęp do demo wyślemy w ciągu dwóch dni roboczych' : 'Dziękujemy. Odezwiemy się w ciągu dwóch dni roboczych';
-    $('done-2').textContent = demo ? 'Dostaniesz login do demo z przykładowym lokalem i krótką instrukcję, od czego zacząć.' : 'Pokażemy Shiftro na Waszych stanowiskach i powiemy wprost, czy pasuje.';
-    $('formview').hidden = true; $('doneview').hidden = false; window.scrollTo(0, 0);
+    var dane = new URLSearchParams(new FormData($('form')));
+    dane.set('mode', demo ? 'demo' : 'test');
+    dane.set('zrodlo', (document.referrer || 'bezpośrednio') + (location.search ? ' ' + location.search : ''));
+
+    $('err').hidden = true;
+    $('go').disabled = true; $('go').textContent = 'Wysyłam…';
+    fetch(ENDPOINT, { method: 'POST', body: dane })
+      .then(function (r) { return r.json(); })
+      .then(function (r) { if (!r.ok) throw new Error(r.blad || 'odrzucone'); pokaz(demo); })
+      .catch(function () {
+        blad('Nie udało się wysłać zgłoszenia. Sprawdź połączenie i spróbuj jeszcze raz.');
+        $('go').disabled = false; $('go').textContent = 'Wyślij zgłoszenie';
+      });
   });
+
+  function pokaz(demo) {
+    var imie = $('f-person').value.trim().split(/\s+/)[0];
+    $('done-h').textContent = 'Dziękujemy, ' + imie + '. Shiftro możesz zobaczyć już teraz';
+    $('done-mail').innerHTML = 'Na <b>' + esc($('f-mail').value.trim()) + '</b> wysłaliśmy list z linkiem do demo i prezentacją. Jeśli nie dotrze w kilka minut, zajrzyj do spamu albo zakładki Oferty.';
+    $('done-2').innerHTML = 'Zadzwonimy na <b>' + esc($('f-tel').value.trim()) + '</b>. 20 minut: zapytamy, jak dziś układacie grafik, pokażemy Shiftro na Waszych stanowiskach i powiemy wprost, czy pasuje.' +
+      (KALENDARZ ? ' <a href="' + esc(KALENDARZ) + '" target="_blank" rel="noopener">Wolisz sam wybrać termin?</a>' : '');
+    if (demo) $('done-3').textContent = 'Jeśli zechcesz sprawdzić Shiftro u siebie: wdrożenie w jeden dzień, kilka tygodni testu za 0 zł, bez umowy na rok.';
+    $('formview').hidden = true; $('doneview').hidden = false; window.scrollTo(0, 0);
+  }
 })();
 </script>
 </body>
