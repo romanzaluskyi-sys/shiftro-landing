@@ -30,8 +30,9 @@
       біль** найважливіший (поле «Co boli», «Grafik dziś»).
 - [ ] Відкрити `demo.shiftro.pl` у трьох вкладках: Panel kierownika, Tablet,
       Telefon pracownika.
-- [ ] Порахувати в калькуляторі на сайті (`#kalkulator`), скільки годин
-      менеджера з'їдає таблиця. Цифра знадобиться на кроці 4.
+- [ ] Колонка «Kalkulator»: якщо клієнт прийшов з калькулятора, там його
+      цифра і припущення. Якщо порожньо, порахувати самому на сайті
+      (`#kalkulator`) за даними анкети. Цифра знадобиться на кроці 4.
 - [ ] Перевірити: якщо роль «pracownik», мета дзвінка інша (див. нижче).
 
 **Коли дзвонити:** 10:00–11:30 або 14:30–17:00, вівторок–четвер. Не в обід
@@ -120,8 +121,14 @@
 
 Якщо підходить, прив'яжіть до цифри з калькулятора:
 
-> Z tego, co Pan mówi, grafik i rozliczenie godzin zjadają około *[N]* godzin
-> miesięcznie. To jest dokładnie to, co Shiftro zabiera.
+> Policzył Pan w kalkulatorze około *[X] zł* miesięcznie. Z tego, co Pan
+> mówi, najwięcej daje *[minuty na kartkach / zbędna godzina / czas
+> kierownika]*. Sprawdźmy to w teście na Waszych liczbach.
+
+Чесно про «зайву годину»: вона з'явиться лише тоді, коли менеджер щодня
+вносить утарг і бачить вартість персоналу відносно нього. Для закладу, який
+тримає все на папері, це другий етап, а не перший тиждень. Спершу години на
+планшеті (пункт «Godziny co do minuty»), потім утарг.
 
 ### 5. Наступний крок — 2–3 хв
 

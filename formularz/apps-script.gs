@@ -31,6 +31,8 @@ const KOLUMNY = [
   ['lokale', 'Ile lokali'], ['ludzie', 'Ludzi w lokalu'], ['dzis', 'Grafik dziś'], ['bol', 'Co boli'],
   ['tablet', 'Tablet'], ['kiedy', 'Kiedy start'], ['osoba', 'Osoba'], ['telefon', 'Telefon'],
   ['email', 'E-mail'], ['rola', 'Rola'], ['zrodlo', 'Źródło'], ['status', 'Status'], ['notatki', 'Notatki'],
+  // Nowe kolumny tylko na końcu: wiersze dopisują się po pozycji, a starsze zgłoszenia już stoją w arkuszu.
+  ['kalkulator', 'Kalkulator'],
 ];
 const ETYKIETY = {
   mode: { test: 'Bezpłatny test w lokalu', demo: 'Najpierw demo' },

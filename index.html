@@ -178,21 +178,58 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 @media (max-width: 960px) { .law-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .law-grid { grid-template-columns: 1fr; } }
 
-/* kalkulator */
+/* kalkulator: trzy źródła pieniędzy, każde z założeniem do zmiany; pakiet wybiera się sam (najlepszy wynik na plus) */
 .calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-radius: 26px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
-.calc .in { padding: 36px; display: grid; gap: 26px; align-content: start; }
-.calc .out { padding: 36px; background: var(--night); color: #fff; display: grid; gap: 18px; align-content: start; }
-.field label { display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; font-size: 15px; margin-bottom: 8px; }
-.field label output { font: 800 26px var(--display); letter-spacing: -.02em; }
-.field input[type=range] { width: 100%; accent-color: var(--accent); height: 28px; }
+.calc .in { padding: 36px; display: grid; gap: 24px; align-content: start; }
+.calc .out { padding: 36px; background: var(--night); color: #fff; display: grid; gap: 16px; align-content: start; }
+.field label, .field .lab { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.field .num { display: inline-flex; align-items: baseline; gap: 6px; font-weight: 600; color: var(--muted); }
+.field .num input { width: 84px; padding: 4px 8px; border: 2px solid var(--line); border-radius: 10px; background: var(--paper); font: 800 22px var(--display); letter-spacing: -.02em; color: var(--ink); text-align: right; -moz-appearance: textfield; }
+.field .num input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.field input[type=range] { width: 100%; accent-color: var(--accent); height: 28px; margin: 0; }
 .field small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
-.out .big { font: 800 clamp(52px, 7vw, 76px)/1 var(--display); letter-spacing: -.03em; }
-.out .big small { font-size: 24px; font-weight: 700; }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg label { position: relative; margin: 0; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg span { display: inline-flex; align-items: center; min-height: 42px; padding: 0 16px; border: 2px solid var(--line); border-radius: 999px; font-weight: 600; font-size: 15px; cursor: pointer; background: var(--surface); }
+.seg input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
+.seg input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.levers { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.levers > p { font: 700 15px var(--display); padding: 18px 0 4px; }
+.lever { display: grid; grid-template-columns: 22px 1fr; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.lever > input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); }
+.lever b { font-size: 16px; }
+.lever b em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: 2px; }
+.lever p { grid-column: 2; font-size: 14.5px; color: var(--muted); line-height: 1.5; }
+.lever:has(> input:not(:checked)) p, .lever:has(> input:not(:checked)) b { opacity: .5; }
+.mini { width: 58px; padding: 2px 6px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); font: 700 15px var(--body); color: var(--ink); text-align: right; -moz-appearance: textfield; }
+.mini::-webkit-inner-spin-button { -webkit-appearance: none; }
+.out .plan-n { font-size: 15px; color: var(--night-text); }
+.out .plan-n b { color: #fff; }
+.out .big { font: 800 clamp(48px, 6.4vw, 72px)/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.out .big small { display: inline-block; white-space: nowrap; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.out .big.zero { color: var(--night-text); }
 .out p { font-size: 15px; color: var(--night-text); }
-.out .row { display: flex; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid var(--night-line); font-size: 15px; color: var(--night-text); }
-.out .row b { color: #fff; font-variant-numeric: tabular-nums; }
+.out .sub b { color: #fff; }
+.out .rows { display: grid; }
+.out .row { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid var(--night-line); font-size: 15px; color: var(--night-text); }
+.out .row b { color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.out .row.off b { color: #8e8a80; font-weight: 500; }
+.out .row.cost b { color: #f39a86; }
+.out .row.sum { border-top: 2px solid #fff; color: #fff; font-weight: 700; }
+.vs { display: grid; gap: 6px; }
+.vs div { height: 12px; border-radius: 6px; background: var(--night-line); overflow: hidden; }
+.vs i { display: block; height: 100%; border-radius: 6px; transition: width .2s; }
+.vs .s i { background: #4fbf7f; } .vs .c i { background: var(--accent); }
+.vs span { font-size: 12.5px; color: var(--night-text); display: flex; justify-content: space-between; }
+.cmp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cmp div { border: 1px solid var(--night-line); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: var(--night-text); display: grid; gap: 2px; }
+.cmp div b { font: 700 16px var(--display); color: #fff; font-variant-numeric: tabular-nums; }
+.cmp div.best { border-color: #fff; box-shadow: inset 0 0 0 1px #fff; }
+.cmp div.na b { color: #8e8a80; font-weight: 500; font-size: 13px; }
+.out .risk { font-size: 13.5px; border-left: 3px solid var(--accent); padding-left: 12px; }
 .out .btn { justify-self: start; margin-top: 4px; }
-@media (max-width: 820px) { .calc { grid-template-columns: 1fr; } .calc .in, .calc .out { padding: 26px; } }
+@media (max-width: 820px) { .calc { grid-template-columns: 1fr; } .calc .in, .calc .out { padding: 24px; } }
 
 /* start */
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
@@ -463,22 +500,44 @@ footer .logo { font-size: 18px; }
     <div class="wrap">
       <div class="sec-h">
         <p class="kicker">Policz sam</p>
-        <h2>Ile czasu kierownika zjada dziś arkusz</h2>
+        <h2>Ile pieniędzy ucieka dziś między kartką a grafikiem</h2>
+        <p class="lead">Trzy miejsca, w których lokal płaci za godziny, których nie potrzebuje. Każde założenie możesz zmienić albo wyłączyć. Liczymy ostrożnie.</p>
       </div>
       <form class="calc" id="calc" onsubmit="return false">
         <div class="in">
-          <div class="field"><label for="c-l">Lokale <output id="o-l">2</output></label><input id="c-l" type="range" min="1" max="10" value="2"></div>
-          <div class="field"><label for="c-p">Pracownicy w jednym lokalu <output id="o-p">12</output></label><input id="c-p" type="range" min="3" max="40" value="12"></div>
-          <div class="field"><label for="c-m">Minut tygodniowo na osobę <output id="o-m">10</output></label><input id="c-m" type="range" min="3" max="30" value="10"><small>przepisywanie godzin, pytania o grafik, zamiany, poprawki</small></div>
-          <div class="field"><label for="c-r">Stawka godzinowa kierownika <output id="o-r">40 zł</output></label><input id="c-r" type="range" min="25" max="80" step="5" value="40"></div>
+          <div class="field"><label for="n-l">Lokale <span class="num"><input id="n-l" type="number" min="1" max="10" value="2" aria-label="Lokale"></span></label><input id="c-l" type="range" min="1" max="10" value="2" aria-hidden="true" tabindex="-1"></div>
+          <div class="field"><label for="n-p">Pracownicy w jednym lokalu <span class="num"><input id="n-p" type="number" min="3" max="60" value="12" aria-label="Pracownicy w jednym lokalu"></span></label><input id="c-p" type="range" min="3" max="60" value="12" aria-hidden="true" tabindex="-1"></div>
+          <div class="field"><label for="n-w">Średnia stawka pracownika <span class="num"><input id="n-w" type="number" min="25" max="70" value="33" aria-label="Średnia stawka pracownika w złotych za godzinę">zł/h</span></label><input id="c-w" type="range" min="25" max="70" value="33" aria-hidden="true" tabindex="-1"><small>brutto, bez kosztów pracodawcy</small></div>
+          <div class="field"><span class="lab">Jak dziś zapisujecie godziny</span><div class="seg" role="radiogroup" aria-label="Jak dziś zapisujecie godziny">
+            <label><input type="radio" name="c-d" value="papier" data-min="8"><span>Kartka, zeszyt</span></label><label><input type="radio" name="c-d" value="arkusz" data-min="5" checked><span>Arkusz</span></label><label><input type="radio" name="c-d" value="aplikacja" data-min="0"><span>Inna aplikacja</span></label>
+          </div></div>
+          <div class="levers">
+            <p>Co liczymy</p>
+            <label class="lever"><input type="checkbox" id="k-1" checked><b>Godziny co do minuty<em>Standard</em></b><p>Na kartce „16:00–22:00”, a ktoś wyszedł 21:50. Zaokrąglenie <input class="mini" id="a-min" type="number" min="0" max="30" value="5" aria-label="Minut zaokrąglenia na zmianę"> min na zmianę. Na tablecie godzina zapisuje się sama.</p></label>
+            <label class="lever"><input type="checkbox" id="k-2" checked><b>Zbędna godzina w grafiku<em>Pełny</em></b><p><input class="mini" id="a-h" type="number" min="0" max="8" step="0.5" value="1" aria-label="Zbędnych godzin dziennie na lokal"> h dziennie na lokal mniej. Działa tylko wtedy, gdy kierownik codziennie wpisuje utarg i widzi koszt pracy wobec niego.</p></label>
+            <label class="lever"><input type="checkbox" id="k-3" checked><b>Czas kierownika</b><p><input class="mini" id="a-k" type="number" min="0" max="60" value="6" aria-label="Minut tygodniowo na pracownika"> min tygodniowo na pracownika: grafik, zamiany, przepisywanie godzin. Stawka <input class="mini" id="a-r" type="number" min="25" max="150" value="45" aria-label="Stawka kierownika w złotych za godzinę"> zł/h.</p></label>
+            <div class="lever" style="grid-template-columns:1fr"><p style="grid-column:1">Pracownik ma średnio <input class="mini" id="a-z" type="number" min="1" max="31" value="16" aria-label="Zmian na pracownika w miesiącu"> zmian w miesiącu.</p></div>
+          </div>
         </div>
         <div class="out" aria-live="polite">
-          <p>Kierownicy tracą na to miesięcznie</p>
-          <div class="big"><span id="r-h">17</span> <small>godzin</small></div>
-          <div class="row"><span>To jest koszt</span><b id="r-z">700 zł / mies.</b></div>
-          <div class="row"><span>Shiftro w pakiecie Standard</span><b id="r-s">398 zł / mies.</b></div>
-          <p id="r-t">Przyjmujemy, że Shiftro zdejmuje około 70% tej pracy. Resztę i tak robi kierownik: decyzje.</p>
-          <a class="btn primary" href="ankieta.html">Sprawdź na swoim lokalu</a>
+          <p class="plan-n" id="r-plan">Najlepiej wychodzi pakiet <b>Pełny</b></p>
+          <div class="big" id="r-big">+2 665 zł <small>na plus co miesiąc</small></div>
+          <p class="sub" id="r-sub"></p>
+          <div class="vs" aria-hidden="true">
+            <span><em style="font-style:normal">Zostaje w lokalu</em><b id="r-vs1"></b></span><div class="s"><i id="b-s"></i></div>
+            <span><em style="font-style:normal">Kosztuje Shiftro</em><b id="r-vs2"></b></span><div class="c"><i id="b-c"></i></div>
+          </div>
+          <div class="rows">
+            <div class="row" id="w-1"><span>Godziny co do minuty</span><b></b></div>
+            <div class="row" id="w-2"><span>Zbędna godzina w grafiku</span><b></b></div>
+            <div class="row" id="w-3"><span>Czas kierownika</span><b></b></div>
+            <div class="row cost" id="w-c"><span></span><b></b></div>
+            <div class="row sum" id="w-s"><span>Na plus</span><b></b></div>
+          </div>
+          <div class="cmp" id="r-cmp"></div>
+          <p class="risk">Poza rachunkiem: za brak rzetelnej ewidencji czasu pracy PIP może nałożyć grzywnę od 1 000 do 30 000 zł (art. 281 KP).</p>
+          <a class="btn primary" id="r-go" href="ankieta.html">Sprawdź to na swoim lokalu</a>
+          <p style="font-size:13px">Prawdziwe liczby zobaczysz w teście za 0 zł. Wynik z kalkulatora dołączymy do zgłoszenia.</p>
         </div>
       </form>
     </div>
@@ -599,16 +658,81 @@ footer .logo { font-size: 18px; }
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
+  // Kalkulator. Ceny jak w cenniku; Grafik (0 zł) tylko do 10 osób w lokalu, bez zapisu godzin i bez Pulsu.
+  var PLANY = [
+    { n: 'Grafik', c: 0, max: 10, minuty: false, godzina: false, kier: 0.4 },
+    { n: 'Standard', c: 199, minuty: true, godzina: false, kier: 0.7 },
+    { n: 'Pełny', c: 349, minuty: true, godzina: true, kier: 0.7 }
+  ];
+  var zl = function (v) { return Math.round(v).toLocaleString('pl-PL').replace(/\s/g, ' ') + ' zł'; };
+  var num = function (id, lo, hi) { var v = parseFloat(String($(id).value).replace(',', '.')); return isNaN(v) ? lo : Math.min(hi, Math.max(lo, v)); };
+  [['l', 1, 10], ['p', 3, 60], ['w', 25, 70]].forEach(function (x) {
+    var r = $('c-' + x[0]), n = $('n-' + x[0]);
+    r.addEventListener('input', function () { n.value = r.value; calc(); });
+    n.addEventListener('input', function () { if (n.value !== '') r.value = num('n-' + x[0], x[1], x[2]); calc(); });
+    n.addEventListener('change', function () { n.value = num('n-' + x[0], x[1], x[2]); calc(); });
+  });
+  document.querySelectorAll('input[name=c-d]').forEach(function (d) { d.addEventListener('change', function () { $('a-min').value = d.dataset.min; calc(); }); });
+  ['k-1', 'k-2', 'k-3', 'a-min', 'a-h', 'a-k', 'a-r', 'a-z'].forEach(function (id) { $(id).addEventListener('input', calc); });
+
   function calc() {
-    var l = +$('c-l').value, p = +$('c-p').value, m = +$('c-m').value, r = +$('c-r').value;
-    var h = l * p * m * 4.33 / 60, z = h * r, s = 199 * l;
-    $('o-l').textContent = l; $('o-p').textContent = p; $('o-m').textContent = m; $('o-r').textContent = r + ' zł';
-    $('r-h').textContent = Math.round(h);
-    $('r-z').textContent = Math.round(z).toLocaleString('pl-PL') + ' zł / mies.';
-    $('r-s').textContent = s.toLocaleString('pl-PL') + ' zł / mies.';
-    $('r-t').textContent = 'Shiftro zdejmie z tego około ' + Math.round(h * 0.7) + ' godzin miesięcznie. Resztę i tak robi kierownik: decyzje.';
+    var l = num('n-l', 1, 10), p = num('n-p', 3, 60), w = num('n-w', 25, 70);
+    var zm = num('a-z', 1, 31);
+    // 1: zaokrąglenia przy ręcznym zapisie; 2: zbędna godzina dziennie (30 dni); 3: czas kierownika (4,33 tygodnia)
+    var g1 = $('k-1').checked ? l * p * zm * num('a-min', 0, 30) / 60 * w : 0;
+    var g2 = $('k-2').checked ? l * num('a-h', 0, 8) * 30 * w : 0;
+    var g3 = $('k-3').checked ? l * p * num('a-k', 0, 60) * 4.33 / 60 * num('a-r', 25, 150) : 0;
+
+    var wyn = PLANY.map(function (pl) {
+      var ok = !pl.max || p <= pl.max;
+      var a = pl.minuty ? g1 : 0, b = pl.godzina ? g2 : 0, c = g3 * pl.kier, koszt = pl.c * l;
+      return { pl: pl, ok: ok, a: a, b: b, c: c, oszcz: a + b + c, koszt: koszt, netto: a + b + c - koszt };
+    });
+    var best = wyn.filter(function (x) { return x.ok; }).sort(function (x, y) { return y.netto - x.netto; })[0];
+    var plus = best.netto > 0;
+
+    $('r-plan').innerHTML = plus ? 'Najlepiej wychodzi pakiet <b>' + best.pl.n + '</b>' + (l > 1 ? ' · ' + l + ' lokale' : '') : 'Przy tych założeniach';
+    $('r-big').className = 'big' + (plus ? '' : ' zero');
+    $('r-big').innerHTML = (plus ? '+' + zl(best.netto) : zl(0)) + ' <small>' + (plus ? 'na plus co miesiąc' : 'na plus') + '</small>';
+    $('r-sub').innerHTML = !plus
+      ? 'Shiftro się tu nie zwróci i powiemy to wprost. Sprawdź, czy założenia pasują do Waszego lokalu.'
+      : best.koszt === 0
+        ? 'Około <b>' + zl(best.netto * 12) + '</b> rocznie, a pakiet Grafik jest bezpłatny.'
+        : 'Około <b>' + zl(best.netto * 12) + '</b> rocznie. Abonament zarabia na siebie w <b>' + Math.max(1, Math.ceil(best.koszt / (best.oszcz / 30))) + ' dni</b> każdego miesiąca.';
+
+    var top = Math.max(best.oszcz, best.koszt, 1);
+    $('b-s').style.width = (best.oszcz / top * 100) + '%'; $('b-c').style.width = (best.koszt / top * 100) + '%';
+    $('r-vs1').textContent = zl(best.oszcz); $('r-vs2').textContent = zl(best.koszt);
+
+    var wiersz = function (id, wl, v, brak) {
+      $(id).classList.toggle('off', !wl || !v);
+      $(id).querySelector('b').textContent = !wl ? 'wyłączone' : brak ? brak : '+' + zl(v);
+    };
+    wiersz('w-1', $('k-1').checked, best.a, !best.pl.minuty ? 'od pakietu Standard' : '');
+    wiersz('w-2', $('k-2').checked, best.b, !best.pl.godzina ? 'w pakiecie Pełny' : '');
+    wiersz('w-3', $('k-3').checked, best.c, '');
+    $('w-c').querySelector('span').textContent = 'Abonament ' + best.pl.n + (l > 1 ? ' (' + l + ' × ' + best.pl.c + ' zł)' : '');
+    $('w-c').querySelector('b').textContent = best.koszt ? '−' + zl(best.koszt) : '0 zł';
+    $('w-s').querySelector('b').textContent = (best.netto >= 0 ? '+' : '−') + zl(Math.abs(best.netto));
+    $('w-s').querySelector('span').textContent = plus ? 'Na plus' : 'Wynik';
+
+    $('r-cmp').innerHTML = wyn.map(function (x) {
+      return '<div class="' + (x === best && plus ? 'best' : '') + (x.ok ? '' : ' na') + '">' + x.pl.n +
+        '<b>' + (x.ok ? (x.netto >= 0 ? '+' : '−') + zl(Math.abs(x.netto)) : 'do 10 osób') + '</b></div>';
+    }).join('');
+
+    // Do ankiety: wstępnie zaznaczone odpowiedzi i wynik, który trafi do arkusza zgłoszeń.
+    var d = document.querySelector('input[name=c-d]:checked').value;
+    var kalk = (plus ? best.pl.n + ': +' + zl(best.netto) + '/mies.' : 'bez zysku') +
+      ' (minuty ' + zl(best.a) + ', godzina ' + zl(best.b) + ', kierownik ' + zl(best.c) + ', abonament ' + zl(best.koszt) + ')' +
+      ' · ' + l + ' lok. × ' + p + ' os., ' + w + ' zł/h, ' + d + ' ' + num('a-min', 0, 30) + ' min';
+    var q = new URLSearchParams({
+      lokale: l === 1 ? '1' : l <= 3 ? '2-3' : l <= 9 ? '4-9' : '10+',
+      ludzie: p <= 10 ? 'do 10' : p <= 25 ? '11-25' : p <= 50 ? '26-50' : '50+',
+      dzis: d, kalk: kalk.replace(/ /g, ' ')
+    });
+    $('r-go').href = 'ankieta.html?' + q.toString();
   }
-  ['c-l', 'c-p', 'c-m', 'c-r'].forEach(function (id) { $(id).addEventListener('input', calc); });
   calc();
   $('copy').addEventListener('click', function () {
     var t = [].slice.call($('msg').querySelectorAll('span')).map(function (s) { return s.textContent; }).join('\n\n');

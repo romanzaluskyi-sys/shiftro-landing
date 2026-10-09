@@ -67,6 +67,7 @@ input::placeholder, textarea::placeholder { color: #8f8b82; font-weight: 500; }
 .plan-h { font: 800 22px var(--d); letter-spacing: -.015em; margin: 18px 0 0; }
 .done li a { color: var(--accent); font-weight: 600; }
 .btn:disabled { opacity: .6; cursor: progress; }
+.kalk { margin: 22px 0 0; padding: 14px 18px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; font-size: 15px; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .done .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--ok-bg); color: var(--ok); display: grid; place-items: center; }
 .done ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
@@ -86,6 +87,7 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
       <p class="eyebrow">Zgłoszenie · 2 minuty</p>
       <h1>Powiedz nam o swoim lokalu</h1>
       <p class="lead">Zaraz po wysłaniu dostaniesz link do demo i krótką prezentację. W ciągu dwóch dni roboczych zadzwonimy i razem zdecydujemy, czy Shiftro pasuje do tego, jak pracujecie. Powiemy też wprost, jeśli nie pasuje.</p>
+      <p class="kalk" id="kalk" hidden></p>
       <div class="mode" role="radiogroup" aria-label="Czego szukasz">
         <label class="card"><input type="radio" name="mode" id="m-test" value="test" checked><span><b>Bezpłatny test w lokalu</b><span>Wdrażamy Shiftro u Was na kilka tygodni</span></span></label>
         <label class="card"><input type="radio" name="mode" id="m-demo" value="demo"><span><b>Najpierw demo</b><span>Link do demo z przykładowym lokalem od razu po wysłaniu</span></span></label>
@@ -123,6 +125,7 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
           <label class="f"><span>Telefon</span><input type="tel" id="f-tel" name="telefon" autocomplete="tel" placeholder="+48 600 000 000" required></label>
         </div>
         <label class="f"><span>E-mail <small>· wyślemy na niego link do demo i prezentację</small></span><input type="email" id="f-mail" name="email" autocomplete="email" placeholder="imie@lokal.pl" required></label>
+        <input type="hidden" name="kalkulator" id="f-kalk">
         <label class="hp" aria-hidden="true">Firma<input type="text" name="firma" tabindex="-1" autocomplete="off"></label>
         <div class="f"><span class="q">Twoja rola</span><div class="chips"><label><input type="radio" name="rola" id="r1" value="wlasciciel"><span>Właściciel</span></label><label><input type="radio" name="rola" id="r2" value="kierownik"><span>Kierownik</span></label><label><input type="radio" name="rola" id="r3" value="pracownik"><span>Pracownik</span></label></div><span class="opt" id="emp" hidden>Skontaktujemy się z Tobą i poprosimy o zgodę pracodawcy, zanim cokolwiek uruchomimy.</span></div>
         <label class="consent"><input type="checkbox" id="f-ok" required><span>Zgadzam się na kontakt i przetwarzanie podanych danych w celu obsługi zgłoszenia do Shiftro. Dane nie są przekazywane dalej i mogę wycofać zgodę w każdej chwili.</span></label>
@@ -164,6 +167,18 @@ footer .wrap { max-width: 1200px; display: flex; justify-content: space-between;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (v) { return String(v).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   if (location.hash === '#demo') $('m-demo').checked = true;
+
+  // Z kalkulatora na stronie (index.html#kalkulator): zaznaczone odpowiedzi i wynik do arkusza.
+  var q = new URLSearchParams(location.search);
+  ['lokale', 'ludzie', 'dzis'].forEach(function (n) {
+    var v = q.get(n);
+    document.querySelectorAll('input[name="' + n + '"]').forEach(function (r) { if (r.value === v) r.checked = true; });
+  });
+  if (q.get('kalk')) {
+    $('f-kalk').value = q.get('kalk').slice(0, 300);
+    var m = q.get('kalk').match(/^[^:]+: (\+[^/]+)\/mies\./);
+    if (m) { $('kalk').hidden = false; $('kalk').textContent = 'Z kalkulatora wyszło około ' + m[1] + ' miesięcznie na plus. Na rozmowie sprawdzimy to na Waszych liczbach.'; }
+  }
   document.querySelectorAll('input[name=rola]').forEach(function (r) { r.addEventListener('change', function () { $('emp').hidden = !$('r3').checked; }); });
 
   function blad(t) { $('err').hidden = false; $('err').textContent = t; }
